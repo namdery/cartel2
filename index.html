@@ -18,17 +18,16 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); scroll-behavior: smooth; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); scroll-behavior: smooth; }
 
         header {
             position: fixed; top: 0; left: 0; right: 0;
-            height: 60px; background: rgba(244, 247, 255, 0.9);
+            height: 60px; background: rgba(244, 247, 255, 0.95);
             backdrop-filter: blur(15px); display: flex;
             align-items: center; padding: 0 15px; z-index: 1000;
             border-bottom: 1px solid var(--frame-blue);
         }
 
-        /* УМЕНЬШЕНО: Логотип 30px */
         .logo-img { height: 30px; cursor: pointer; transition: 0.2s; }
         .logo-img:active { transform: scale(0.9); }
 
@@ -37,7 +36,9 @@
             background: #ffffff; border: 1px solid var(--frame-blue); 
             font-weight: 700; font-size: 12px; color: var(--text-main); 
             cursor: pointer; padding: 8px 12px; border-radius: 10px;
+            transition: all 0.2s;
         }
+        .nav-btn:active { transform: scale(0.95); }
 
         .articles-dropdown {
             position: absolute; top: 45px; right: 0;
@@ -48,7 +49,8 @@
             border: 1px solid var(--frame-blue); z-index: 1001;
         }
         .articles-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .article-link { display: block; padding: 12px 15px; text-decoration: none; color: var(--text-main); font-size: 13px; font-weight: 600; border-bottom: 1px solid #f0f3ff; }
+        .article-link { display: block; padding: 12px 15px; text-decoration: none; color: var(--text-main); font-size: 13px; font-weight: 600; border-bottom: 1px solid #f0f3ff; transition: 0.2s; }
+        .article-link:active { background: #f0f3ff; }
 
         .container { max-width: 600px; margin: 0 auto; padding: 85px 20px 40px; }
         .reveal { opacity: 0; transform: translateY(20px); transition: var(--transition); margin-bottom: 40px; }
@@ -57,13 +59,14 @@
         .hero-title { font-weight: 900; font-size: 28px; line-height: 1.15; letter-spacing: -1px; }
         .gradient-text { background: linear-gradient(90deg, #4351ff 0%, #a855f7 50%, #ff6d2d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* КАРТОЧКИ С СИНЕЙ РАМКОЙ */
         .event-card {
             background: #ffffff; border: 2px solid var(--frame-blue);
             border-radius: 22px; margin-bottom: 25px; overflow: hidden;
             box-shadow: 0 5px 15px rgba(67, 81, 255, 0.05);
+            transition: transform 0.2s;
         }
-        .event-img { width: 100%; height: 180px; object-fit: cover; display: block; background: #eef2ff; }
+        .event-card:active { transform: scale(0.98); }
+        .event-img { width: 100%; height: 180px; object-fit: cover; display: block; background: #eef2ff; cursor: pointer; }
         .event-body { padding: 20px; }
         .event-date-box { color: var(--accent-blue); font-weight: 800; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
 
@@ -72,36 +75,39 @@
             color: white; border: none; border-radius: 14px;
             font-weight: 800; cursor: pointer; font-size: 15px; transition: 0.2s;
         }
-        /* Стиль для кнопки "Вы записаны" */
-        .btn-main.registered { background: var(--accent-green) !important; cursor: default; }
+        .btn-main:active { transform: scale(0.98); }
+        .btn-main.registered { background: var(--accent-green); cursor: default; }
 
-        .btn-back { width: 100%; padding: 12px; background: #fff; color: #64748b; border: 1px solid var(--frame-blue); border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn-back { width: 100%; padding: 12px; background: #fff; color: #64748b; border: 1px solid var(--frame-blue); border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; }
+        .btn-back:active { transform: scale(0.98); }
 
-        /* Соцсети отрисованные */
         .social-row { display: flex; gap: 12px; margin-top: 20px; }
-        .draw-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
-        .draw-yt { background: #ff0000; } 
-        .draw-tg { background: #24a1de; } 
-        .draw-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
+        .draw-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s; }
+        .draw-icon:active { transform: scale(0.9); }
+        .draw-yt { background: #ff0000; } .draw-tg { background: #24a1de; } .draw-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(26, 30, 46, 0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 100%; max-width: 340px; padding: 25px; border-radius: 25px; border: 2px solid var(--frame-blue); }
-        .modal input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid var(--frame-blue); border-radius: 12px; font-size: 16px; outline: none; background: #f8faff; }
+        .modal input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid var(--frame-blue); border-radius: 12px; font-size: 16px; outline: none; background: #f8faff; transition: 0.2s; }
+        .modal input:focus { border-color: var(--accent-orange); }
+
+        .loading { text-align: center; padding: 40px; color: #64748b; }
+        .error { color: #ff4444; text-align: center; padding: 20px; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="image1.png" class="logo-img" onclick="goHome()">
+        <img src="https://via.placeholder.com/30x30?text=Logo" class="logo-img" onclick="goHome()">
         <div class="nav-menu">
             <button class="nav-btn" onclick="toggleArticles()">Статьи</button>
             <button class="nav-btn" onclick="showEventsList()">Мероприятия</button>
             <div id="articles-list" class="articles-dropdown">
-                <a href="https://statia1" class="article-link">Статья 1</a>
-                <a href="https://statia2" class="article-link">Статья 2</a>
-                <a href="https://statia3" class="article-link">Статья 3</a>
-                <a href="https://statia4" class="article-link">Статья 4</a>
-                <a href="https://statia5" class="article-link">Статья 5</a>
+                <a href="https://t.me/statia1" class="article-link">Статья 1</a>
+                <a href="https://t.me/statia2" class="article-link">Статья 2</a>
+                <a href="https://t.me/statia3" class="article-link">Статья 3</a>
+                <a href="https://t.me/statia4" class="article-link">Статья 4</a>
+                <a href="https://t.me/statia5" class="article-link">Статья 5</a>
             </div>
         </div>
     </header>
@@ -112,11 +118,10 @@
                 Cartel — международный клуб трейдеров, инвесторов и предпринимателей, <span class="gradient-text">стремящихся к финансовому росту и успеху!</span>
             </div>
             <div class="reveal" style="font-size: 16px; color: #475569; line-height: 1.6;">
-                Мы объединяем более 100 000 участников со всего мира. Наш клуб — это не просто площадка для общения, это мощный инструмент для вашего роста.
+                Мы объединяем более 100 000 участников со всего мира. Присоединяйтесь к нам!
             </div>
-
-             <div class="social-row reveal">
-                <a href="https://YouTube" class="draw-icon draw-yt"><svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg></a>
+            <div class="social-row reveal">
+                <a href="https://www.youtube.com/@user-ry6hs4wt7h/videos" class="draw-icon draw-yt"><svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg></a>
                 <a href="https://t.me/cartel_info" class="draw-icon draw-tg"><svg width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg></a>
                 <a href="https://www.instagram.com/cartel_fx/" class="draw-icon draw-ig"><svg width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2zm5.2-9.3c.6 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2-1.2-.5-1.2-1.2.5-1.2 1.2-1.2z"/></svg></a>
             </div>
@@ -125,6 +130,7 @@
         <div id="events-list-view" style="display:none">
             <h2 style="margin-bottom: 20px; font-weight: 900;">Мероприятия</h2>
             <div id="events-container">Загрузка...</div>
+            <button class="btn-back" onclick="goHome()">← На главную</button>
         </div>
 
         <div id="event-detail-view" style="display:none">
@@ -134,9 +140,9 @@
 
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 5px;">Запись</h3>
-            <input type="text" id="reg-name" placeholder="Твое имя">
-            <input type="tel" id="reg-phone" placeholder="Номер телефона">
+            <h3 style="margin-bottom: 5px;">Запись на мероприятие</h3>
+            <input type="text" id="reg-name" placeholder="Ваше имя" autocomplete="off">
+            <input type="tel" id="reg-phone" placeholder="Номер телефона" autocomplete="off">
             <button class="btn-main" onclick="submitRegistration()">Записаться</button>
             <button class="btn-back" style="border:none" onclick="closeModal()">Отмена</button>
         </div>
@@ -145,20 +151,15 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.headerColor = "#f4f7ff";
         
-        // ССЫЛКА NGROK
-        const API_URL = "https://unlubricating-healthily-alfreda.ngrok-free.dev"; 
+        // ВАЖНО: Замените на ваш реальный URL (локальный IP или ngrok)
+        // Для локальной сети: http://192.168.x.x:8080
+        // Для ngrok: https://your-ngrok-url.ngrok-free.dev
+        const API_URL = "http://localhost:8080"; // ИЗМЕНИТЕ ЭТОТ URL!
         
-        // Заголовки для обхода браузерного предупреждения ngrok на телефоне
-        const fetchHeaders = {
-            'ngrok-skip-browser-warning': '69420',
-            'Content-Type': 'application/json'
-        };
-
         let allEvents = [];
         let currentActiveEventId = null;
-        let eventAddress = "ADRES";
+        let eventAddress = "Москва, ул. Тверская, д. 15";
 
         function hideAll() {
             document.getElementById('home-view').style.display = 'none';
@@ -179,109 +180,179 @@
             const container = document.getElementById('events-container');
             const userId = tg.initDataUnsafe?.user?.id || 0;
             
+            container.innerHTML = '<div class="loading">Загрузка мероприятий...</div>';
+            
             try {
-                // Получаем события
-                const res = await fetch(`${API_URL}/api/events`, { headers: fetchHeaders });
+                console.log('Загрузка с URL:', `${API_URL}/api/events`);
+                const res = await fetch(`${API_URL}/api/events`);
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
                 const data = await res.json();
-                allEvents = data.events;
-                eventAddress = data.address || "ADRES";
-                container.innerHTML = '';
-
-                if (!allEvents || allEvents.length === 0) {
-                    container.innerHTML = '<div style="text-align:center; padding:20px; color:#94a3b8;">Мероприятий пока нет.</div>';
+                console.log('Получены данные:', data);
+                
+                allEvents = data.events || [];
+                eventAddress = data.address || "Москва, ул. Тверская, д. 15";
+                
+                if (allEvents.length === 0) {
+                    container.innerHTML = '<div class="loading">Мероприятий пока нет</div>';
                     return;
                 }
-
+                
+                container.innerHTML = '';
+                
                 for (let ev of allEvents) {
-                    // ПРОВЕРКА: Записан ли пользователь?
-                    const checkRes = await fetch(`${API_URL}/api/check`, {
-                        method: 'POST',
-                        headers: fetchHeaders,
-                        body: JSON.stringify({ user_id: userId, event_id: ev.id })
-                    });
-                    const checkData = await checkRes.json();
-                    const isRegistered = checkData.registered;
-
-                    const card = document.createElement('div');
-                    card.className = 'event-card';
-                    
-                    // Фото (берем через туннель)
-                    const photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img" onclick="showDetail(${ev.id})">` : '';
-                    
-                    card.innerHTML = `
-                        ${photoHtml}
-                        <div class="event-body">
-                            <div class="event-date-box">${ev.date}</div>
-                            <h3 style="font-weight:900; font-size:18px; margin-bottom:12px; cursor:pointer" onclick="showDetail(${ev.id})">${ev.name}</h3>
-                            <button class="btn-main ${isRegistered ? 'registered' : ''}" 
-                                    onclick="${isRegistered ? '' : `triggerReg(${ev.id})`}">
-                                ${isRegistered ? 'Вы записаны' : 'Записаться'}
-                            </button>
-                        </div>
-                    `;
-                    container.appendChild(card);
+                    try {
+                        // Проверяем запись пользователя
+                        const checkRes = await fetch(`${API_URL}/api/check`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ user_id: userId, event_id: ev.id })
+                        });
+                        const checkData = await checkRes.json();
+                        const isRegistered = checkData.registered;
+                        
+                        const card = document.createElement('div');
+                        card.className = 'event-card';
+                        
+                        // Используем photo_url из ответа сервера
+                        const photoHtml = ev.photo_url ? 
+                            `<img src="${ev.photo_url}" class="event-img" onclick="showDetail(${ev.id})" onerror="this.style.display='none'">` : 
+                            `<div style="height: 180px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${ev.name}</div>`;
+                        
+                        card.innerHTML = `
+                            ${photoHtml}
+                            <div class="event-body">
+                                <div class="event-date-box">📅 ${ev.date}</div>
+                                <h3 style="font-weight:900; font-size:18px; margin-bottom:12px; cursor:pointer" onclick="showDetail(${ev.id})">${ev.name}</h3>
+                                <button class="btn-main ${isRegistered ? 'registered' : ''}" 
+                                        onclick="${isRegistered ? '' : `triggerReg(${ev.id})`}">
+                                    ${isRegistered ? '✓ Вы записаны' : '✍️ Записаться'}
+                                </button>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    } catch (err) {
+                        console.error('Ошибка при загрузке мероприятия:', err);
+                    }
                 }
             } catch (e) {
-                console.error(e);
-                container.innerHTML = '<div style="color:red; text-align:center; padding:20px;">Ошибка связи с сервером. Проверьте туннель.</div>';
+                console.error('Ошибка загрузки:', e);
+                container.innerHTML = `<div class="error">
+                    ❌ Ошибка подключения к серверу<br>
+                    Убедитесь, что бот запущен и API доступен по адресу: ${API_URL}<br>
+                    ${e.message}
+                </div>`;
             }
         }
 
         function showDetail(id) {
             hideAll();
             const ev = allEvents.find(x => x.id === id);
+            if (!ev) {
+                alert('Мероприятие не найдено');
+                goHome();
+                return;
+            }
+            
             currentActiveEventId = id;
             const content = document.getElementById('detail-content');
             document.getElementById('event-detail-view').style.display = 'block';
             
-            const photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img" style="border-radius:20px; margin-bottom:15px">` : '';
+            const photoHtml = ev.photo_url ? 
+                `<img src="${ev.photo_url}" class="event-img" style="border-radius:20px; margin-bottom:15px" onerror="this.style.display='none'">` : 
+                `<div style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${ev.name}</div>`;
 
             content.innerHTML = `
                 ${photoHtml}
-                <div class="event-date-box">${ev.date}</div>
+                <div class="event-date-box">📅 ${ev.date}</div>
                 <h2 style="font-weight:900; font-size:24px; margin-bottom:10px">${ev.name}</h2>
                 <div style="line-height:1.6; color:#475569; font-size:15px; margin-bottom:25px">${ev.description}</div>
-                <button class="btn-main" onclick="openModal()">Записаться</button>
-                <button class="btn-back" onclick="showEventsList()">Назад к списку</button>
+                <div style="margin-bottom: 15px; color: #64748b;">
+                    <strong>📍 Адрес:</strong> ${eventAddress}<br>
+                    <strong>🔗 Ссылка:</strong> <a href="${ev.link}" target="_blank">${ev.link}</a>
+                </div>
+                <button class="btn-main" onclick="openModal()">✍️ Записаться</button>
+                <button class="btn-back" onclick="showEventsList()">← Назад к списку</button>
             `;
             window.scrollTo(0,0);
         }
 
-        function triggerReg(id) { currentActiveEventId = id; openModal(); }
-        function toggleArticles() { document.getElementById('articles-list').classList.toggle('active'); }
-        function openModal() { document.getElementById('modal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        function triggerReg(id) { 
+            currentActiveEventId = id; 
+            openModal(); 
+        }
+        
+        function toggleArticles() { 
+            document.getElementById('articles-list').classList.toggle('active'); 
+        }
+        
+        function openModal() { 
+            document.getElementById('modal').style.display = 'flex'; 
+        }
+        
+        function closeModal() { 
+            document.getElementById('modal').style.display = 'none'; 
+            document.getElementById('reg-name').value = '';
+            document.getElementById('reg-phone').value = '';
+        }
 
         async function submitRegistration() {
-            const name = document.getElementById('reg-name').value;
-            const phone = document.getElementById('reg-phone').value;
+            const name = document.getElementById('reg-name').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
             const userId = tg.initDataUnsafe?.user?.id || 0;
             const ev = allEvents.find(x => x.id === currentActiveEventId);
 
-            if(!name || !phone) { alert('Заполните поля'); return; }
+            if (!name || !phone) { 
+                tg.showAlert('Пожалуйста, заполните все поля'); 
+                return; 
+            }
 
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST',
-                    headers: fetchHeaders,
-                    body: JSON.stringify({ user_id: userId, event_id: currentActiveEventId, name: name, phone: phone })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ 
+                        user_id: userId, 
+                        event_id: currentActiveEventId, 
+                        name, 
+                        phone 
+                    })
                 });
                 const result = await res.json();
-                if(result.success) {
-                    // ТЕКСТ БЛАГОДАРНОСТИ ИЗ ЗАПРОСА
-                    tg.showAlert(`Вы записались! ждем вас ${ev.date} в 12:00 по адресу: ${eventAddress}`);
+                
+                if (result.success) {
+                    tg.showAlert(`✅ Спасибо, ${name}! Вы записаны на мероприятие "${ev.name}"!\n\nЖдем вас ${ev.date} в 12:00 по адресу: ${eventAddress}`);
                     closeModal();
-                    showEventsList(); // Обновляем список, чтобы кнопка стала зеленой
+                    showEventsList(); // Обновляем список
                 } else {
-                    tg.showAlert(result.error);
+                    tg.showAlert(result.error || 'Ошибка записи');
                 }
-            } catch (e) { alert('Ошибка на стороне сервера'); }
+            } catch (e) { 
+                console.error(e);
+                tg.showAlert('Ошибка сервера. Попробуйте позже.'); 
+            }
         }
 
+        // Анимация появления
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) entry.target.classList.add('visible'); 
+            });
         }, { threshold: 0.1 });
+        
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        // Закрываем дропдаун при клике вне
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('articles-list');
+            const btn = event.target.closest('.nav-btn');
+            if (!btn || btn.textContent !== 'Статьи') {
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        console.log('App ready. API_URL:', API_URL);
     </script>
 </body>
 </html>
