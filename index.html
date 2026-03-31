@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cartel Mini App</title>
+    <title>Cartel Club</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #ffffff;
-            --text-main: #1e1e2e;
-            --accent-blue: #4351ff;
-            --accent-orange: #ff6d2d;
-            --card-bg: #f4f7fb;
+            --bg-color: #e2e8f0; /* Цвет фона как на картинке */
+            --text-main: #1a1a1a;
+            --accent-blue: #2563eb;
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -26,404 +27,420 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
+        /* Header & Nav */
         header {
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            background: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo-btn {
-            height: 32px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .container {
-            padding: 0 20px 30px 20px;
-        }
-
-        h1 {
-            font-weight: 900;
-            font-size: 32px;
-            line-height: 1.1;
-            margin: 10px 0 20px 0;
-            letter-spacing: -1px;
-        }
-
-        .blue-span {
-            color: var(--accent-blue);
-        }
-
-        .description {
-            font-size: 15px;
-            color: #6a6a77;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .event-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid #eef0f5;
-            transition: transform 0.2s;
-        }
-
-        .event-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .event-card h3 {
-            margin: 0 0 8px 0;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .event-date {
-            color: var(--accent-blue);
-            font-weight: 700;
-            font-size: 14px;
-            text-transform: uppercase;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-
-        .event-desc {
-            font-size: 14px;
-            color: #555;
-            margin: 10px 0;
-            line-height: 1.4;
-        }
-
-        .btn-register {
-            background: var(--accent-orange);
-            color: white;
-            text-align: center;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 700;
-            border: none;
-            width: 100%;
-            cursor: pointer;
-            margin-top: 15px;
-            font-size: 14px;
-            transition: opacity 0.2s;
-        }
-
-        .btn-register:active {
-            opacity: 0.8;
-        }
-
-        .btn-register.disabled, .btn-register:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .btn-orange {
-            background: var(--accent-orange);
-            color: white;
-            text-align: center;
-            padding: 18px;
-            border-radius: 15px;
-            font-weight: 700;
-            text-decoration: none;
-            display: block;
-            margin-top: 20px;
-            box-shadow: 0 4px 15px rgba(255, 109, 45, 0.3);
-            cursor: pointer;
-            border: none;
-            width: 100%;
-            font-size: 16px;
-        }
-
-        .modal {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
+            right: 0;
+            height: 70px;
+            padding: 0 20px;
+            display: flex;
             align-items: center;
+            justify-content: space-between;
+            background: rgba(226, 232, 240, 0.8);
+            backdrop-filter: blur(10px);
             z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
-        .modal-content {
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            position: relative;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        /* Dropdown Articles */
+        .dropdown-menu {
+            position: absolute;
+            top: 45px;
+            left: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:last-child { border: none; }
+        .dropdown-item:hover { background: #f8fafc; }
+
+        /* Content Sections */
+        .content-section {
+            padding-top: 100px;
+            min-height: 100vh;
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: var(--transition);
+            margin-bottom: 60px;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-text {
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .sub-text {
+            font-size: 18px;
+            font-weight: 400;
+            color: #4b5563;
+        }
+
+        /* Events Styling */
+        .event-card {
             background: white;
             border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 350px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
 
-        .modal-content h3 {
-            margin-bottom: 20px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .input-group input {
+        .event-img {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 16px;
+            height: 200px;
+            object-fit: cover;
+            background: #cbd5e1;
         }
 
-        .modal-buttons {
+        .event-info {
+            padding: 20px;
+        }
+
+        .event-date {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .btn-action {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--text-main);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Footer - Replicating Image */
+        .footer {
+            background: transparent;
+            padding: 60px 25px 40px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+
+        .contact-item {
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+
+        .social-btn {
+            width: 140px;
+            padding: 12px;
+            background: #0015ff;
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .social-icons-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-circle {
+            width: 45px;
+            height: 45px;
+            background: #2d3436;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+        }
+
+        .payment-icons {
             display: flex;
             gap: 10px;
+            margin: 20px 0;
+            align-items: center;
+        }
+
+        .trustpilot {
+            border: 1px solid #00b67a;
+            padding: 8px 15px;
+            display: inline-block;
+            font-size: 12px;
+            color: #1a1a1a;
             margin-top: 20px;
         }
 
-        .modal-buttons button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-submit {
-            background: var(--accent-orange);
-            color: white;
-        }
-
-        .btn-cancel {
-            background: #f0f0f0;
-            color: #666;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            z-index: 1000;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateX(-50%) translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(-50%) translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
+        /* SVG Icons Placeholder style */
+        svg { fill: currentColor; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="image1.png" alt="Cartel" class="logo-btn" onclick="window.location.reload()">
+        <div class="header-left">
+            <!-- Logo Simple Mockup -->
+            <svg class="logo" viewBox="0 0 200 40" onclick="showSection('home')">
+                <path d="M10 20 L25 5 M10 20 L25 35 M10 20 L35 20 M10 20 L5 5 M10 20 L5 35" stroke="#2563eb" stroke-width="3" fill="none"/>
+                <text x="50" y="28" font-family="Inter" font-weight="800" font-size="24" fill="black">CARTEL</text>
+            </svg>
+            
+            <div class="nav-links">
+                <button class="nav-btn" onclick="toggleArticles()">Статьи</button>
+                <button class="nav-btn" onclick="showSection('events')">Мероприятия</button>
+                
+                <div id="articles-menu" class="dropdown-menu">
+                    <a href="https://statia1" class="dropdown-item">Статья 1</a>
+                    <a href="https://statia2" class="dropdown-item">Статья 2</a>
+                    <a href="https://statia3" class="dropdown-item">Статья 3</a>
+                    <a href="https://statia4" class="dropdown-item">Статья 4</a>
+                    <a href="https://statia5" class="dropdown-item">Статья 5</a>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <div class="container">
-        <div id="main-view">
-            <h1>Global club of <span class="blue-span">traders & investors.</span></h1>
-            <p class="description">Актуальные события и инструменты для вашего финансового роста в одном приложении.</p>
+    <!-- Главная страница -->
+    <section id="home" class="content-section active">
+        <div class="container">
+            <div class="reveal hero-text">
+                Cartel — международный клуб трейдеров, инвесторов и предпринимателей, стремящихся к финансовому росту и успеху!
+            </div>
             
-            <div id="events-container">
-                <div class="loading">🔄 Загрузка мероприятий...</div>
+            <div class="reveal sub-text">
+                Мы объединяем более 100 000 участников со всего мира — от новичков до профессионалов — для того, чтобы создавать успешные стратегии, обмениваться опытом и развиваться вместе.
+            </div>
+            
+            <div class="reveal sub-text" style="font-weight: 600; color: black;">
+                Наш клуб — это не просто площадка для общения, это мощный инструмент для вашего роста и стабильных доходов.
             </div>
 
-            <button class="btn-orange" onclick="Telegram.WebApp.close()">Вернуться в бот</button>
-        </div>
-    </div>
+            <!-- Footer Section -->
+            <div class="reveal footer">
+                <div class="footer-grid">
+                    <div>
+                        <div class="contact-item">
+                            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            schooladmin@cartel.market
+                        </div>
+                        <div class="contact-item">
+                            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                            +35725030949
+                        </div>
+                        <p style="margin: 20px 0; font-size: 14px; opacity: 0.6;">SharPay: Быстро. Удобно. Безопасно.</p>
+                        
+                        <div class="payment-icons">
+                            <!-- Simple shapes for payment methods -->
+                            <div style="width: 30px; height: 30px; background: #eb001b; border-radius: 4px;"></div>
+                            <div style="width: 30px; height: 30px; background: #f79e1b; border-radius: 4px; margin-left: -15px; opacity: 0.8;"></div>
+                            <span style="font-weight: 800; font-size: 12px; margin-left: 10px;">VISA</span>
+                            <span style="font-weight: 800; font-size: 12px; margin-left: 10px;">IBAN</span>
+                        </div>
 
-    <!-- Модальное окно регистрации -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <h3>📝 Регистрация на мероприятие</h3>
-            <div class="input-group">
-                <label>Ваше имя</label>
-                <input type="text" id="user-name" placeholder="Введите ваше имя">
-            </div>
-            <div class="input-group">
-                <label>Номер телефона</label>
-                <input type="tel" id="user-phone" placeholder="+7 (XXX) XXX-XX-XX">
-            </div>
-            <div class="modal-buttons">
-                <button class="btn-submit" onclick="submitRegistration()">Записаться</button>
-                <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+                        <div class="trustpilot">
+                            Review us on ★ Trustpilot
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="footer-title">Наш менеджер ответит на твои вопросы по курсам и советникам:</p>
+                        <a href="https://t.me/manager_cartelmarket" class="social-btn">
+                            Telegram <span>↗</span>
+                        </a>
+
+                        <p class="footer-title" style="margin-top: 40px;">Много полезного контента в наших соцсетях:</p>
+                        <div class="social-icons-row">
+                            <a href="https://YouTube" class="icon-circle">Y</a>
+                            <a href="https://t.me/cartel_info" class="icon-circle">T</a>
+                            <a href="#" class="icon-circle">M</a>
+                            <a href="https://www.instagram.com/cartel_fx/" class="icon-circle">I</a>
+                            <a href="#" class="icon-circle">F</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Страница Мероприятий -->
+    <section id="events" class="content-section">
+        <div class="container">
+            <h2 style="margin-bottom: 30px; font-weight: 800;">Мероприятия</h2>
+            <div id="events-list">
+                <!-- Карточки будут здесь -->
+                <div class="event-card">
+                    <img src="https://images.unsplash.com/photo-1591115765373-520b7a2d7a59?auto=format&fit=crop&q=80&w=500" class="event-img" alt="Conf">
+                    <div class="event-info">
+                        <span class="event-date">25 Октября, 19:00</span>
+                        <h3>Вебинар: Стратегии 2024</h3>
+                        <p style="font-size: 14px; color: #666; margin-top: 10px;">Разбор актуальных рыночных условий от ведущих аналитиков клуба.</p>
+                        <button class="btn-action" onclick="registerEvent(1)">Записаться</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.headerColor = "#ffffff";
-        
-        let currentEventId = null;
-        let userData = tg.initDataUnsafe?.user;
-        
-        // ВАЖНО: ЗАМЕНИТЕ НА URL ВАШЕГО СЕРВЕРА С БОТОМ
-        // Используйте ngrok URL или публичный IP
-        const API_BASE_URL = "http://localhost:8080"; // ЗАМЕНИТЕ НА ВАШ URL
-        
-        async function loadEvents() {
-            const container = document.getElementById('events-container');
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/events`);
-                const data = await response.json();
-                
-                if (!data.events || data.events.length === 0) {
-                    container.innerHTML = '<div class="event-card">📭 Мероприятий пока нет</div>';
-                    return;
-                }
-                
-                container.innerHTML = '';
-                
-                for (const event of data.events) {
-                    // Проверяем, зарегистрирован ли пользователь
-                    let isRegistered = false;
-                    if (userData) {
-                        try {
-                            const checkResponse = await fetch(`${API_BASE_URL}/api/check`, {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({
-                                    user_id: userData.id,
-                                    event_id: event.id
-                                })
-                            });
-                            const checkResult = await checkResponse.json();
-                            isRegistered = checkResult.registered;
-                        } catch (err) {
-                            console.error('Ошибка проверки регистрации:', err);
-                        }
+        tg.headerColor = "#e2e8f0";
+
+        // Функция переключения секций
+        function showSection(id) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+            if (id === 'home') initScrollReveal();
+        }
+
+        // Выпадающее меню статей
+        function toggleArticles() {
+            document.getElementById('articles-menu').classList.toggle('active');
+        }
+
+        // Закрытие меню при клике вне
+        window.onclick = function(event) {
+            if (!event.target.matches('.nav-btn')) {
+                document.getElementById('articles-menu').classList.remove('active');
+            }
+        }
+
+        // Анимация при скролле (Intersection Observer)
+        function initScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
                     }
-                    
-                    const eventCard = document.createElement('div');
-                    eventCard.className = 'event-card';
-                    eventCard.innerHTML = `
-                        <span class="event-date">📅 ${event.date}</span>
-                        <h3>${event.name}</h3>
-                        <div class="event-desc">${event.description}</div>
-                        ${event.link ? `<a href="${event.link}" target="_blank" style="color: #4351ff; font-size: 13px; text-decoration: none;">🔗 Подробнее</a>` : ''}
-                        <button class="btn-register" 
-                                onclick="openRegistration(${event.id})"
-                                ${isRegistered ? 'disabled' : ''}
-                                style="${isRegistered ? 'background: #4caf50;' : ''}">
-                            ${isRegistered ? '✓ Вы уже записаны' : '✍️ Записаться'}
-                        </button>
-                    `;
-                    container.appendChild(eventCard);
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки мероприятий:', error);
-                container.innerHTML = `<div class="event-card" style="color: red;">❌ Ошибка подключения к серверу. Убедитесь, что бот запущен.</div>`;
-            }
-        }
-        
-        function openRegistration(eventId) {
-            if (!userData) {
-                showMessage('❌ Пожалуйста, откройте приложение через Telegram бота');
-                return;
-            }
-            currentEventId = eventId;
-            document.getElementById('modal').style.display = 'flex';
-        }
-        
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-            document.getElementById('user-name').value = '';
-            document.getElementById('user-phone').value = '';
-            currentEventId = null;
-        }
-        
-        async function submitRegistration() {
-            const name = document.getElementById('user-name').value.trim();
-            const phone = document.getElementById('user-phone').value.trim();
-            
-            if (!name) {
-                showMessage('❌ Пожалуйста, введите ваше имя');
-                return;
-            }
-            if (!phone) {
-                showMessage('❌ Пожалуйста, введите номер телефона');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/register`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        user_id: userData.id,
-                        event_id: currentEventId,
-                        name: name,
-                        phone: phone
-                    })
                 });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showMessage('✅ ' + result.message);
-                    closeModal();
-                    loadEvents(); // Обновляем список
-                    
-                    // Отправляем уведомление в Telegram
-                    tg.sendData(JSON.stringify({
-                        action: 'registered',
-                        event_id: currentEventId
-                    }));
-                } else {
-                    showMessage('❌ ' + (result.error || 'Ошибка регистрации'));
-                }
-            } catch (error) {
-                console.error('Ошибка регистрации:', error);
-                showMessage('❌ Ошибка регистрации. Проверьте подключение к серверу.');
-            }
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
-        
-        function showMessage(text) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = text;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+
+        // Заглушка для регистрации
+        function registerEvent(id) {
+            tg.showConfirm("Вы хотите записаться на мероприятие?", (ok) => {
+                if(ok) tg.showAlert("Заявка принята! Менеджер свяжется с вами.");
+            });
         }
-        
-        // Загружаем мероприятия при открытии
-        loadEvents();
-        
-        // Обновляем каждые 30 секунд
-        setInterval(loadEvents, 30000);
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            initScrollReveal();
+        });
     </script>
 </body>
 </html>
