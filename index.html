@@ -7,352 +7,567 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #f4f7ff;
-            --text-main: #1a1e2e;
-            --accent-blue: #4351ff;
-            --frame-blue: #d1dbff;
-            --accent-orange: #ff6d2d;
-            --accent-green: #2ecc71;
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1a1e2e;
+        }
 
+        /* Основной контейнер */
+        .main-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f4f7ff;
+            min-height: 100vh;
+        }
+
+        /* Хедер */
         header {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: 60px; background: rgba(244, 247, 255, 0.95);
-            backdrop-filter: blur(15px); display: flex;
-            align-items: center; padding: 0 15px; z-index: 1000;
-            border-bottom: 1px solid var(--frame-blue);
+            position: sticky;
+            top: 0;
+            background: rgba(244, 247, 255, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #d1dbff;
+            z-index: 1000;
         }
 
-        .logo-img { height: 30px; cursor: pointer; transition: 0.2s; }
-        .logo-img:active { transform: scale(0.9); }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #4351ff 0%, #a855f7 50%, #ff6d2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
 
-        .nav-menu { display: flex; gap: 8px; margin-left: auto; position: relative; }
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
         .nav-btn {
-            background: #ffffff; border: 1px solid var(--frame-blue); 
-            font-weight: 700; font-size: 12px; color: var(--text-main); 
-            cursor: pointer; padding: 8px 12px; border-radius: 10px;
+            background: white;
+            border: 1px solid #d1dbff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
             transition: all 0.2s;
+            color: #1a1e2e;
         }
-        .nav-btn:active { transform: scale(0.95); }
 
-        .articles-dropdown {
-            position: absolute; top: 45px; right: 0;
-            background: white; border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(67, 81, 255, 0.1);
-            width: 180px; opacity: 0; visibility: hidden;
-            transform: translateY(-10px); transition: 0.3s;
-            border: 1px solid var(--frame-blue); z-index: 1001;
+        .nav-btn:active {
+            transform: scale(0.95);
+            background: #f0f3ff;
         }
-        .articles-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .article-link { display: block; padding: 12px 15px; text-decoration: none; color: var(--text-main); font-size: 13px; font-weight: 600; border-bottom: 1px solid #f0f3ff; transition: 0.2s; }
-        .article-link:active { background: #f0f3ff; }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 85px 20px 40px; }
-        .reveal { opacity: 0; transform: translateY(20px); transition: var(--transition); margin-bottom: 40px; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+        /* Контент */
+        .container {
+            padding: 20px;
+        }
 
-        .hero-title { font-weight: 900; font-size: 28px; line-height: 1.15; letter-spacing: -1px; }
-        .gradient-text { background: linear-gradient(90deg, #4351ff 0%, #a855f7 50%, #ff6d2d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        /* Главная страница */
+        .hero {
+            text-align: center;
+            padding: 40px 20px;
+        }
 
+        .hero-title {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #4351ff 0%, #a855f7 50%, #ff6d2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 16px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Карточки мероприятий */
         .event-card {
-            background: #ffffff; border: 2px solid var(--frame-blue);
-            border-radius: 22px; margin-bottom: 25px; overflow: hidden;
-            box-shadow: 0 5px 15px rgba(67, 81, 255, 0.05);
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid #d1dbff;
             transition: transform 0.2s;
         }
-        .event-card:active { transform: scale(0.98); }
-        .event-img { width: 100%; height: 180px; object-fit: cover; display: block; background: #eef2ff; cursor: pointer; }
-        .event-body { padding: 20px; }
-        .event-date-box { color: var(--accent-blue); font-weight: 800; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
 
-        .btn-main {
-            width: 100%; padding: 16px; background: var(--accent-orange);
-            color: white; border: none; border-radius: 14px;
-            font-weight: 800; cursor: pointer; font-size: 15px; transition: 0.2s;
+        .event-card:active {
+            transform: scale(0.98);
         }
-        .btn-main:active { transform: scale(0.98); }
-        .btn-main.registered { background: var(--accent-green); cursor: default; }
 
-        .btn-back { width: 100%; padding: 12px; background: #fff; color: #64748b; border: 1px solid var(--frame-blue); border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; transition: 0.2s; }
-        .btn-back:active { transform: scale(0.98); }
+        .event-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+        }
 
-        .social-row { display: flex; gap: 12px; margin-top: 20px; }
-        .draw-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s; }
-        .draw-icon:active { transform: scale(0.9); }
-        .draw-yt { background: #ff0000; } .draw-tg { background: #24a1de; } .draw-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
+        .event-info {
+            padding: 20px;
+        }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(26, 30, 46, 0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 100%; max-width: 340px; padding: 25px; border-radius: 25px; border: 2px solid var(--frame-blue); }
-        .modal input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid var(--frame-blue); border-radius: 12px; font-size: 16px; outline: none; background: #f8faff; transition: 0.2s; }
-        .modal input:focus { border-color: var(--accent-orange); }
+        .event-date {
+            color: #4351ff;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
 
-        .loading { text-align: center; padding: 40px; color: #64748b; }
-        .error { color: #ff4444; text-align: center; padding: 20px; }
+        .event-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .event-description {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        /* Кнопки */
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #ff6d2d;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary.registered {
+            background: #2ecc71;
+            cursor: default;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #64748b;
+            border: 1px solid #d1dbff;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+            background: #f8fafc;
+        }
+
+        /* Социальные сети */
+        .social-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .social-icon:active {
+            transform: scale(0.9);
+        }
+
+        .youtube { background: #ff0000; }
+        .telegram { background: #24a1de; }
+        .instagram { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 340px;
+            width: 100%;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #d1dbff;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            background: #f8faff;
+        }
+
+        .modal-input:focus {
+            border-color: #ff6d2d;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+        }
     </style>
 </head>
 <body>
-
-    <header>
-        <img src="https://via.placeholder.com/30x30?text=Logo" class="logo-img" onclick="goHome()">
-        <div class="nav-menu">
-            <button class="nav-btn" onclick="toggleArticles()">Статьи</button>
-            <button class="nav-btn" onclick="showEventsList()">Мероприятия</button>
-            <div id="articles-list" class="articles-dropdown">
-                <a href="https://t.me/statia1" class="article-link">Статья 1</a>
-                <a href="https://t.me/statia2" class="article-link">Статья 2</a>
-                <a href="https://t.me/statia3" class="article-link">Статья 3</a>
-                <a href="https://t.me/statia4" class="article-link">Статья 4</a>
-                <a href="https://t.me/statia5" class="article-link">Статья 5</a>
+    <div class="main-container">
+        <header>
+            <div class="logo" onclick="goHome()">CARTEL</div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showEvents()">Мероприятия</button>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <div class="container">
-        <div id="home-view">
-            <div class="reveal hero-title">
-                Cartel — международный клуб трейдеров, инвесторов и предпринимателей, <span class="gradient-text">стремящихся к финансовому росту и успеху!</span>
-            </div>
-            <div class="reveal" style="font-size: 16px; color: #475569; line-height: 1.6;">
-                Мы объединяем более 100 000 участников со всего мира. Присоединяйтесь к нам!
-            </div>
-            <div class="social-row reveal">
-                <a href="https://www.youtube.com/@user-ry6hs4wt7h/videos" class="draw-icon draw-yt"><svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg></a>
-                <a href="https://t.me/cartel_info" class="draw-icon draw-tg"><svg width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg></a>
-                <a href="https://www.instagram.com/cartel_fx/" class="draw-icon draw-ig"><svg width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2zm5.2-9.3c.6 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2-1.2-.5-1.2-1.2.5-1.2 1.2-1.2z"/></svg></a>
-            </div>
-        </div>
+        <div class="container">
+            <!-- Главная страница -->
+            <div id="homePage">
+                <div class="hero fade-in">
+                    <h1 class="hero-title">
+                        Cartel — международный клуб<br>
+                        <span class="gradient-text">трейдеров, инвесторов и предпринимателей</span>
+                    </h1>
+                    <p class="hero-description">
+                        Мы объединяем более 100 000 участников со всего мира,<br>
+                        стремящихся к финансовому росту и успеху!
+                    </p>
+                    <button class="btn-primary" onclick="showEvents()">🎉 Смотреть мероприятия</button>
+                </div>
 
-        <div id="events-list-view" style="display:none">
-            <h2 style="margin-bottom: 20px; font-weight: 900;">Мероприятия</h2>
-            <div id="events-container">Загрузка...</div>
-            <button class="btn-back" onclick="goHome()">← На главную</button>
-        </div>
+                <div class="social-section fade-in">
+                    <h3 style="margin-bottom: 15px;">Мы в соцсетях</h3>
+                    <div class="social-icons">
+                        <a href="https://www.youtube.com/@user-ry6hs4wt7h/videos" class="social-icon youtube" target="_blank">
+                            <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                                <path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/>
+                            </svg>
+                        </a>
+                        <a href="https://t.me/cartel_info" class="social-icon telegram" target="_blank">
+                            <svg width="22" height="22" fill="white" viewBox="0 0 24 24">
+                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/cartel_fx/" class="social-icon instagram" target="_blank">
+                            <svg width="22" height="22" fill="white" viewBox="0 0 24 24">
+                                <path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-        <div id="event-detail-view" style="display:none">
-            <div id="detail-content"></div>
+            <!-- Страница с мероприятиями -->
+            <div id="eventsPage" style="display: none;">
+                <h2 style="margin-bottom: 20px;">🎉 Ближайшие мероприятия</h2>
+                <div id="eventsList"></div>
+                <button class="btn-secondary" onclick="goHome()">← На главную</button>
+            </div>
+
+            <!-- Детальная страница мероприятия -->
+            <div id="detailPage" style="display: none;">
+                <div id="eventDetail"></div>
+                <button class="btn-secondary" onclick="showEvents()">← Назад к списку</button>
+            </div>
         </div>
     </div>
 
+    <!-- Модальное окно -->
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 5px;">Запись на мероприятие</h3>
-            <input type="text" id="reg-name" placeholder="Ваше имя" autocomplete="off">
-            <input type="tel" id="reg-phone" placeholder="Номер телефона" autocomplete="off">
-            <button class="btn-main" onclick="submitRegistration()">Записаться</button>
-            <button class="btn-back" style="border:none" onclick="closeModal()">Отмена</button>
+            <h3 class="modal-title">✍️ Запись на мероприятие</h3>
+            <input type="text" id="userName" class="modal-input" placeholder="Ваше имя">
+            <input type="tel" id="userPhone" class="modal-input" placeholder="Номер телефона">
+            <button class="btn-primary" onclick="submitRegistration()" style="margin-top: 10px;">Записаться</button>
+            <button class="btn-secondary" onclick="closeModal()" style="margin-top: 10px;">Отмена</button>
         </div>
     </div>
 
     <script>
+        // Инициализация Telegram WebApp
         const tg = window.Telegram.WebApp;
         tg.expand();
+        tg.enableClosingConfirmation();
+
+        // Конфигурация
+        // ВАЖНО: Замените на ваш ngrok URL!
+        const API_URL = "https://unlubricating-healthily-alfreda.ngrok-free.dev";
         
-        // ВАЖНО: Замените на ваш реальный URL (локальный IP или ngrok)
-        // Для локальной сети: http://192.168.x.x:8080
-        // Для ngrok: https://your-ngrok-url.ngrok-free.dev
-        const API_URL = "https://unlubricating-healthily-alfreda.ngrok-free.dev"; // ИЗМЕНИТЕ ЭТОТ URL!
-        
+        // Данные
         let allEvents = [];
-        let currentActiveEventId = null;
-        let eventAddress = "Москва, ул. Тверская, д. 15";
+        let currentEvent = null;
+        let eventAddress = "";
 
-        function hideAll() {
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('events-list-view').style.display = 'none';
-            document.getElementById('event-detail-view').style.display = 'none';
-            document.getElementById('articles-list').classList.remove('active');
-        }
-
+        // Функции навигации
         function goHome() {
-            hideAll();
-            document.getElementById('home-view').style.display = 'block';
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('eventsPage').style.display = 'none';
+            document.getElementById('detailPage').style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        async function showEventsList() {
-            hideAll();
-            document.getElementById('events-list-view').style.display = 'block';
-            const container = document.getElementById('events-container');
-            const userId = tg.initDataUnsafe?.user?.id || 0;
+        async function showEvents() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('eventsPage').style.display = 'block';
+            document.getElementById('detailPage').style.display = 'none';
             
-            container.innerHTML = '<div class="loading">Загрузка мероприятий...</div>';
+            const eventsContainer = document.getElementById('eventsList');
+            eventsContainer.innerHTML = '<div class="loading">⏳ Загрузка мероприятий...</div>';
             
             try {
-                console.log('Загрузка с URL:', `${API_URL}/api/events`);
-                const res = await fetch(`${API_URL}/api/events`);
-                if (!res.ok) {
-                    throw new Error(`HTTP ${res.status}`);
-                }
-                const data = await res.json();
-                console.log('Получены данные:', data);
+                const response = await fetch(`${API_URL}/api/events`);
+                if (!response.ok) throw new Error('Ошибка загрузки');
                 
+                const data = await response.json();
                 allEvents = data.events || [];
                 eventAddress = data.address || "Москва, ул. Тверская, д. 15";
                 
                 if (allEvents.length === 0) {
-                    container.innerHTML = '<div class="loading">Мероприятий пока нет</div>';
+                    eventsContainer.innerHTML = '<div class="loading">📭 Мероприятий пока нет</div>';
                     return;
                 }
                 
-                container.innerHTML = '';
+                eventsContainer.innerHTML = '';
                 
-                for (let ev of allEvents) {
+                for (const event of allEvents) {
+                    // Проверяем, записан ли пользователь
+                    const userId = tg.initDataUnsafe?.user?.id || 0;
+                    let isRegistered = false;
+                    
                     try {
-                        // Проверяем запись пользователя
                         const checkRes = await fetch(`${API_URL}/api/check`, {
                             method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({ user_id: userId, event_id: ev.id })
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ user_id: userId, event_id: event.id })
                         });
                         const checkData = await checkRes.json();
-                        const isRegistered = checkData.registered;
-                        
-                        const card = document.createElement('div');
-                        card.className = 'event-card';
-                        
-                        // Используем photo_url из ответа сервера
-                        const photoHtml = ev.photo_url ? 
-                            `<img src="${ev.photo_url}" class="event-img" onclick="showDetail(${ev.id})" onerror="this.style.display='none'">` : 
-                            `<div style="height: 180px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${ev.name}</div>`;
-                        
-                        card.innerHTML = `
-                            ${photoHtml}
-                            <div class="event-body">
-                                <div class="event-date-box">📅 ${ev.date}</div>
-                                <h3 style="font-weight:900; font-size:18px; margin-bottom:12px; cursor:pointer" onclick="showDetail(${ev.id})">${ev.name}</h3>
-                                <button class="btn-main ${isRegistered ? 'registered' : ''}" 
-                                        onclick="${isRegistered ? '' : `triggerReg(${ev.id})`}">
-                                    ${isRegistered ? '✓ Вы записаны' : '✍️ Записаться'}
-                                </button>
-                            </div>
-                        `;
-                        container.appendChild(card);
+                        isRegistered = checkData.registered;
                     } catch (err) {
-                        console.error('Ошибка при загрузке мероприятия:', err);
+                        console.error('Ошибка проверки регистрации:', err);
                     }
+                    
+                    const eventCard = document.createElement('div');
+                    eventCard.className = 'event-card';
+                    
+                    const imageHtml = event.photo_url ? 
+                        `<img src="${event.photo_url}" class="event-image" onclick="showEventDetail(${event.id})" onerror="this.style.display='none'">` :
+                        `<div class="event-image" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 18px; font-weight: bold;" onclick="showEventDetail(${event.id})">
+                            📅 ${event.name}
+                        </div>`;
+                    
+                    eventCard.innerHTML = `
+                        ${imageHtml}
+                        <div class="event-info">
+                            <div class="event-date">📅 ${event.date} в 12:00</div>
+                            <div class="event-title" onclick="showEventDetail(${event.id})">${event.name}</div>
+                            <div class="event-description">${event.description.substring(0, 100)}${event.description.length > 100 ? '...' : ''}</div>
+                            <button class="btn-primary ${isRegistered ? 'registered' : ''}" 
+                                    onclick="${isRegistered ? '' : `openRegistrationModal(${event.id})`}">
+                                ${isRegistered ? '✓ Вы уже записаны' : '✍️ Записаться'}
+                            </button>
+                        </div>
+                    `;
+                    eventsContainer.appendChild(eventCard);
                 }
-            } catch (e) {
-                console.error('Ошибка загрузки:', e);
-                container.innerHTML = `<div class="error">
-                    ❌ Ошибка подключения к серверу<br>
-                    Убедитесь, что бот запущен и API доступен по адресу: ${API_URL}<br>
-                    ${e.message}
-                </div>`;
+            } catch (error) {
+                console.error('Ошибка:', error);
+                eventsContainer.innerHTML = `
+                    <div class="error">
+                        ❌ Ошибка подключения к серверу<br>
+                        Проверьте, запущен ли бот и доступен ли API: ${API_URL}
+                    </div>
+                `;
             }
         }
 
-        function showDetail(id) {
-            hideAll();
-            const ev = allEvents.find(x => x.id === id);
-            if (!ev) {
-                alert('Мероприятие не найдено');
-                goHome();
-                return;
+        async function showEventDetail(eventId) {
+            const event = allEvents.find(e => e.id === eventId);
+            if (!event) return;
+            
+            currentEvent = event;
+            
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('eventsPage').style.display = 'none';
+            document.getElementById('detailPage').style.display = 'block';
+            
+            const userId = tg.initDataUnsafe?.user?.id || 0;
+            let isRegistered = false;
+            
+            try {
+                const checkRes = await fetch(`${API_URL}/api/check`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, event_id: event.id })
+                });
+                const checkData = await checkRes.json();
+                isRegistered = checkData.registered;
+            } catch (err) {
+                console.error('Ошибка проверки регистрации:', err);
             }
             
-            currentActiveEventId = id;
-            const content = document.getElementById('detail-content');
-            document.getElementById('event-detail-view').style.display = 'block';
+            const detailContainer = document.getElementById('eventDetail');
+            const imageHtml = event.photo_url ? 
+                `<img src="${event.photo_url}" style="width: 100%; height: 250px; object-fit: cover; border-radius: 16px; margin-bottom: 20px;" onerror="this.style.display='none'">` : '';
             
-            const photoHtml = ev.photo_url ? 
-                `<img src="${ev.photo_url}" class="event-img" style="border-radius:20px; margin-bottom:15px" onerror="this.style.display='none'">` : 
-                `<div style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">${ev.name}</div>`;
-
-            content.innerHTML = `
-                ${photoHtml}
-                <div class="event-date-box">📅 ${ev.date}</div>
-                <h2 style="font-weight:900; font-size:24px; margin-bottom:10px">${ev.name}</h2>
-                <div style="line-height:1.6; color:#475569; font-size:15px; margin-bottom:25px">${ev.description}</div>
-                <div style="margin-bottom: 15px; color: #64748b;">
-                    <strong>📍 Адрес:</strong> ${eventAddress}<br>
-                    <strong>🔗 Ссылка:</strong> <a href="${ev.link}" target="_blank">${ev.link}</a>
+            detailContainer.innerHTML = `
+                ${imageHtml}
+                <div style="margin-bottom: 20px;">
+                    <div class="event-date" style="font-size: 14px;">📅 ${event.date} в 12:00</div>
+                    <h1 style="font-size: 28px; font-weight: 800; margin: 10px 0;">${event.name}</h1>
+                    <div style="color: #64748b; line-height: 1.6; margin: 15px 0;">
+                        ${event.description}
+                    </div>
+                    <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin: 15px 0;">
+                        <div>📍 <strong>Адрес:</strong> ${eventAddress}</div>
+                        <div style="margin-top: 8px;">🔗 <strong>Ссылка:</strong> <a href="${event.link}" target="_blank" style="color: #4351ff;">${event.link}</a></div>
+                    </div>
+                    <button class="btn-primary ${isRegistered ? 'registered' : ''}" 
+                            onclick="${isRegistered ? '' : `openRegistrationModal(${event.id})`}">
+                        ${isRegistered ? '✓ Вы уже записаны' : '✍️ Записаться на мероприятие'}
+                    </button>
                 </div>
-                <button class="btn-main" onclick="openModal()">✍️ Записаться</button>
-                <button class="btn-back" onclick="showEventsList()">← Назад к списку</button>
             `;
-            window.scrollTo(0,0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function triggerReg(id) { 
-            currentActiveEventId = id; 
-            openModal(); 
+        function openRegistrationModal(eventId) {
+            currentEvent = allEvents.find(e => e.id === eventId);
+            document.getElementById('modal').style.display = 'flex';
         }
-        
-        function toggleArticles() { 
-            document.getElementById('articles-list').classList.toggle('active'); 
-        }
-        
-        function openModal() { 
-            document.getElementById('modal').style.display = 'flex'; 
-        }
-        
-        function closeModal() { 
-            document.getElementById('modal').style.display = 'none'; 
-            document.getElementById('reg-name').value = '';
-            document.getElementById('reg-phone').value = '';
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('userName').value = '';
+            document.getElementById('userPhone').value = '';
         }
 
         async function submitRegistration() {
-            const name = document.getElementById('reg-name').value.trim();
-            const phone = document.getElementById('reg-phone').value.trim();
+            const name = document.getElementById('userName').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
             const userId = tg.initDataUnsafe?.user?.id || 0;
-            const ev = allEvents.find(x => x.id === currentActiveEventId);
-
-            if (!name || !phone) { 
-                tg.showAlert('Пожалуйста, заполните все поля'); 
-                return; 
+            
+            if (!name || !phone) {
+                tg.showAlert('❌ Пожалуйста, заполните все поля');
+                return;
             }
-
+            
             try {
-                const res = await fetch(`${API_URL}/api/register`, {
+                const response = await fetch(`${API_URL}/api/register`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ 
-                        user_id: userId, 
-                        event_id: currentActiveEventId, 
-                        name, 
-                        phone 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        event_id: currentEvent.id,
+                        name: name,
+                        phone: phone
                     })
                 });
-                const result = await res.json();
+                
+                const result = await response.json();
                 
                 if (result.success) {
-                    tg.showAlert(`✅ Спасибо, ${name}! Вы записаны на мероприятие "${ev.name}"!\n\nЖдем вас ${ev.date} в 12:00 по адресу: ${eventAddress}`);
+                    tg.showAlert(`✅ Спасибо, ${name}!\n\nВы записаны на мероприятие "${currentEvent.name}"\n\n📅 ${currentEvent.date} в 12:00\n📍 ${eventAddress}`);
                     closeModal();
-                    showEventsList(); // Обновляем список
+                    showEvents(); // Обновляем список
                 } else {
-                    tg.showAlert(result.error || 'Ошибка записи');
+                    tg.showAlert(result.error || '❌ Ошибка записи');
                 }
-            } catch (e) { 
-                console.error(e);
-                tg.showAlert('Ошибка сервера. Попробуйте позже.'); 
+            } catch (error) {
+                console.error('Ошибка:', error);
+                tg.showAlert('❌ Ошибка сервера. Попробуйте позже.');
             }
         }
-
-        // Анимация появления
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { 
-                if (entry.isIntersecting) entry.target.classList.add('visible'); 
-            });
-        }, { threshold: 0.1 });
-        
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        
-        // Закрываем дропдаун при клике вне
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('articles-list');
-            const btn = event.target.closest('.nav-btn');
-            if (!btn || btn.textContent !== 'Статьи') {
-                dropdown.classList.remove('active');
-            }
-        });
-        
-        console.log('App ready. API_URL:', API_URL);
     </script>
 </body>
 </html>
