@@ -3,444 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cartel Club</title>
+    <title>Cartel Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #e2e8f0; /* Цвет фона как на картинке */
+            --bg-color: #f0f4f8;
             --text-main: #1a1a1a;
-            --accent-blue: #2563eb;
-            --card-bg: rgba(255, 255, 255, 0.6);
-            --transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            --accent-blue: #4351ff;
+            --transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             overflow-x: hidden;
-            line-height: 1.6;
+            scroll-behavior: smooth;
         }
 
-        /* Header & Nav */
+        /* Header */
         header {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            padding: 0 20px;
+            top: 0; left: 0; right: 0;
+            height: 65px;
+            background: rgba(240, 244, 248, 0.9);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            background: rgba(226, 232, 240, 0.8);
-            backdrop-filter: blur(10px);
+            padding: 0 15px;
             z-index: 1000;
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .logo {
-            height: 30px;
+        .logo-img {
+            height: 35px;
             cursor: pointer;
+            transition: transform 0.2s;
+            margin-right: 15px;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 15px;
-            position: relative;
-        }
+        .nav-menu { display: flex; gap: 10px; position: relative; }
 
         .nav-btn {
-            background: none;
-            border: none;
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--text-main);
-            cursor: pointer;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .nav-btn:hover {
-            background: rgba(0,0,0,0.05);
+            background: none; border: none;
+            font-weight: 700; font-size: 14px;
+            color: var(--text-main); cursor: pointer;
+            padding: 8px 12px; border-radius: 8px;
         }
 
         /* Dropdown Articles */
-        .dropdown-menu {
-            position: absolute;
-            top: 45px;
-            left: 0;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 180px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: var(--transition);
-            overflow: hidden;
+        .articles-dropdown {
+            position: absolute; top: 45px; left: 0;
+            background: white; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 200px; opacity: 0; visibility: hidden;
+            transform: translateY(-10px); transition: 0.3s;
+            z-index: 1001;
         }
 
-        .dropdown-menu.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+        .articles-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        .article-link {
+            display: block; padding: 12px 20px;
+            text-decoration: none; color: var(--text-main);
+            font-size: 14px; border-bottom: 1px solid #f0f0f0;
         }
 
-        .dropdown-item {
-            display: block;
-            padding: 12px 20px;
-            text-decoration: none;
-            color: var(--text-main);
-            font-size: 14px;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s;
+        /* Main Content */
+        .container { max-width: 600px; margin: 0 auto; padding: 80px 20px 40px; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: var(--transition); margin-bottom: 40px; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .hero-title { font-weight: 900; font-size: 32px; line-height: 1.1; letter-spacing: -1px; }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #4351ff 0%, #8e44ad 50%, #ff6d2d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .dropdown-item:last-child { border: none; }
-        .dropdown-item:hover { background: #f8fafc; }
+        .sub-text { font-size: 16px; color: #555; line-height: 1.6; }
 
-        /* Content Sections */
-        .content-section {
-            padding-top: 100px;
-            min-height: 100vh;
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 25px;
-        }
-
-        /* Animations */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: var(--transition);
-            margin-bottom: 60px;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .hero-text {
-            font-size: 24px;
-            font-weight: 800;
-            line-height: 1.2;
-            letter-spacing: -0.5px;
-        }
-
-        .sub-text {
-            font-size: 18px;
-            font-weight: 400;
-            color: #4b5563;
-        }
-
-        /* Events Styling */
+        /* Events Section */
+        #events-view { display: none; }
         .event-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            background: white; border-radius: 20px;
+            margin-bottom: 25px; overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+        }
+        .event-img { width: 100%; height: 180px; object-fit: cover; background: #ddd; }
+        .event-body { padding: 20px; }
+        .event-date { color: var(--accent-blue); font-weight: 700; font-size: 13px; margin-bottom: 5px; display: block; }
+        .btn-reg {
+            width: 100%; padding: 15px; background: #ff6d2d;
+            color: white; border: none; border-radius: 12px;
+            font-weight: 700; cursor: pointer; margin-top: 15px;
         }
 
-        .event-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: #cbd5e1;
+        /* Footer - Drawing Style Icons */
+        .footer { padding-top: 50px; border-top: 1px solid rgba(0,0,0,0.05); }
+        .footer-manager {
+            background: #0015ff; color: white; border-radius: 30px;
+            padding: 15px 25px; display: flex; justify-content: space-between;
+            text-decoration: none; font-weight: 700; margin: 20px 0;
         }
 
-        .event-info {
-            padding: 20px;
+        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
+        
+        .icon-box {
+            width: 50px; height: 50px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: 0.3s;
         }
+        .ic-yt { background: #FF0000; color: white; }
+        .ic-tg { background: #0088cc; color: white; }
+        .ic-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
+        .ic-fb { background: #1877F2; color: white; }
 
-        .event-date {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--accent-blue);
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            display: block;
+        /* Modal */
+        .modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6); z-index: 2000;
+            align-items: center; justify-content: center;
         }
-
-        .btn-action {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: var(--text-main);
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 600;
-            margin-top: 15px;
-            border: none;
-            cursor: pointer;
+        .modal-content {
+            background: white; width: 90%; max-width: 350px;
+            padding: 30px; border-radius: 25px;
         }
-
-        /* Footer - Replicating Image */
-        .footer {
-            background: transparent;
-            padding: 60px 25px 40px;
+        .modal input {
+            width: 100%; padding: 12px; margin: 10px 0;
+            border: 1px solid #ddd; border-radius: 10px;
         }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-
-        @media (max-width: 600px) {
-            .footer-grid { grid-template-columns: 1fr; }
-        }
-
-        .contact-item {
-            margin-bottom: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .footer-title {
-            font-size: 18px;
-            font-weight: 400;
-            margin-bottom: 25px;
-            line-height: 1.3;
-        }
-
-        .social-btn {
-            width: 140px;
-            padding: 12px;
-            background: #0015ff;
-            color: white;
-            border-radius: 30px;
-            text-decoration: none;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            margin-bottom: 30px;
-        }
-
-        .social-icons-row {
-            display: flex;
-            gap: 12px;
-        }
-
-        .icon-circle {
-            width: 45px;
-            height: 45px;
-            background: #2d3436;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-        }
-
-        .payment-icons {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-            align-items: center;
-        }
-
-        .trustpilot {
-            border: 1px solid #00b67a;
-            padding: 8px 15px;
-            display: inline-block;
-            font-size: 12px;
-            color: #1a1a1a;
-            margin-top: 20px;
-        }
-
-        /* SVG Icons Placeholder style */
-        svg { fill: currentColor; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-left">
-            <!-- Logo Simple Mockup -->
-            <svg class="logo" viewBox="0 0 200 40" onclick="showSection('home')">
-                <path d="M10 20 L25 5 M10 20 L25 35 M10 20 L35 20 M10 20 L5 5 M10 20 L5 35" stroke="#2563eb" stroke-width="3" fill="none"/>
-                <text x="50" y="28" font-family="Inter" font-weight="800" font-size="24" fill="black">CARTEL</text>
-            </svg>
-            
-            <div class="nav-links">
-                <button class="nav-btn" onclick="toggleArticles()">Статьи</button>
-                <button class="nav-btn" onclick="showSection('events')">Мероприятия</button>
-                
-                <div id="articles-menu" class="dropdown-menu">
-                    <a href="https://statia1" class="dropdown-item">Статья 1</a>
-                    <a href="https://statia2" class="dropdown-item">Статья 2</a>
-                    <a href="https://statia3" class="dropdown-item">Статья 3</a>
-                    <a href="https://statia4" class="dropdown-item">Статья 4</a>
-                    <a href="https://statia5" class="dropdown-item">Статья 5</a>
-                </div>
+        <img src="image1.png" alt="Cartel" class="logo-img" onclick="goHome()">
+        <div class="nav-menu">
+            <button class="nav-btn" onclick="toggleArticles()">Статьи</button>
+            <button class="nav-btn" onclick="showEvents()">Мероприятия</button>
+            <div id="articles-list" class="articles-dropdown">
+                <a href="https://statia1" class="article-link">Статья 1</a>
+                <a href="https://statia2" class="article-link">Статья 2</a>
+                <a href="https://statia3" class="article-link">Статья 3</a>
+                <a href="https://statia4" class="article-link">Статья 4</a>
+                <a href="https://statia5" class="article-link">Статья 5</a>
             </div>
         </div>
     </header>
 
-    <!-- Главная страница -->
-    <section id="home" class="content-section active">
-        <div class="container">
-            <div class="reveal hero-text">
-                Cartel — международный клуб трейдеров, инвесторов и предпринимателей, стремящихся к финансовому росту и успеху!
+    <div class="container">
+        <!-- Главный экран -->
+        <div id="home-view">
+            <div class="reveal hero-title">
+                Cartel — международный клуб трейдеров, инвесторов и предпринимателей, <span class="gradient-text">стремящихся к финансовому росту и успеху!</span>
             </div>
             
             <div class="reveal sub-text">
                 Мы объединяем более 100 000 участников со всего мира — от новичков до профессионалов — для того, чтобы создавать успешные стратегии, обмениваться опытом и развиваться вместе.
             </div>
-            
-            <div class="reveal sub-text" style="font-weight: 600; color: black;">
+
+            <div class="reveal sub-text" style="font-weight: 700; color: #000;">
                 Наш клуб — это не просто площадка для общения, это мощный инструмент для вашего роста и стабильных доходов.
             </div>
 
-            <!-- Footer Section -->
             <div class="reveal footer">
-                <div class="footer-grid">
-                    <div>
-                        <div class="contact-item">
-                            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                            schooladmin@cartel.market
-                        </div>
-                        <div class="contact-item">
-                            <svg width="20" height="20" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                            +35725030949
-                        </div>
-                        <p style="margin: 20px 0; font-size: 14px; opacity: 0.6;">SharPay: Быстро. Удобно. Безопасно.</p>
-                        
-                        <div class="payment-icons">
-                            <!-- Simple shapes for payment methods -->
-                            <div style="width: 30px; height: 30px; background: #eb001b; border-radius: 4px;"></div>
-                            <div style="width: 30px; height: 30px; background: #f79e1b; border-radius: 4px; margin-left: -15px; opacity: 0.8;"></div>
-                            <span style="font-weight: 800; font-size: 12px; margin-left: 10px;">VISA</span>
-                            <span style="font-weight: 800; font-size: 12px; margin-left: 10px;">IBAN</span>
-                        </div>
+                <p style="font-size: 14px; opacity: 0.7;">Наш менеджер ответит на твои вопросы:</p>
+                <a href="https://t.me/manager_cartelmarket" class="footer-manager">Telegram <span>↗</span></a>
 
-                        <div class="trustpilot">
-                            Review us on ★ Trustpilot
-                        </div>
-                    </div>
-
-                    <div>
-                        <p class="footer-title">Наш менеджер ответит на твои вопросы по курсам и советникам:</p>
-                        <a href="https://t.me/manager_cartelmarket" class="social-btn">
-                            Telegram <span>↗</span>
-                        </a>
-
-                        <p class="footer-title" style="margin-top: 40px;">Много полезного контента в наших соцсетях:</p>
-                        <div class="social-icons-row">
-                            <a href="https://YouTube" class="icon-circle">Y</a>
-                            <a href="https://t.me/cartel_info" class="icon-circle">T</a>
-                            <a href="#" class="icon-circle">M</a>
-                            <a href="https://www.instagram.com/cartel_fx/" class="icon-circle">I</a>
-                            <a href="#" class="icon-circle">F</a>
-                        </div>
-                    </div>
+                <p style="font-size: 14px; opacity: 0.7; margin-top: 30px;">Мы в соцсетях:</p>
+                <div class="social-icons">
+                    <a href="https://YouTube" class="icon-box ic-yt">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg>
+                    </a>
+                    <a href="https://t.me/cartel_info" class="icon-box ic-tg">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/cartel_fx/" class="icon-box ic-ig">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2zm5.2-9.3c.6 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2-1.2-.5-1.2-1.2.5-1.2 1.2-1.2z"/></svg>
+                    </a>
+                    <a href="#" class="icon-box ic-fb">
+                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.5V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg>
+                    </a>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Страница Мероприятий -->
-    <section id="events" class="content-section">
-        <div class="container">
-            <h2 style="margin-bottom: 30px; font-weight: 800;">Мероприятия</h2>
-            <div id="events-list">
-                <!-- Карточки будут здесь -->
-                <div class="event-card">
-                    <img src="https://images.unsplash.com/photo-1591115765373-520b7a2d7a59?auto=format&fit=crop&q=80&w=500" class="event-img" alt="Conf">
-                    <div class="event-info">
-                        <span class="event-date">25 Октября, 19:00</span>
-                        <h3>Вебинар: Стратегии 2024</h3>
-                        <p style="font-size: 14px; color: #666; margin-top: 10px;">Разбор актуальных рыночных условий от ведущих аналитиков клуба.</p>
-                        <button class="btn-action" onclick="registerEvent(1)">Записаться</button>
-                    </div>
-                </div>
+        <!-- Экран мероприятий -->
+        <div id="events-view">
+            <h2 style="margin-bottom: 25px; font-weight: 900;">Мероприятия</h2>
+            <div id="events-container">
+                <p>Загрузка...</p>
             </div>
         </div>
-    </section>
+    </div>
+
+    <!-- Модалка -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 10px;">Запись</h3>
+            <input type="text" id="reg-name" placeholder="Ваше имя">
+            <input type="tel" id="reg-phone" placeholder="Номер телефона">
+            <button class="btn-reg" onclick="submitReg()">Записаться</button>
+            <button class="nav-btn" style="width:100%; margin-top:10px" onclick="closeModal()">Отмена</button>
+        </div>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.headerColor = "#e2e8f0";
 
-        // Функция переключения секций
-        function showSection(id) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo(0,0);
-            if (id === 'home') initScrollReveal();
+        const API_URL = "http://localhost:8080"; // Измени на свой URL если сервер не локально
+        let currentEventId = null;
+
+        // Навигация
+        function goHome() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('home-view').style.display = 'block';
+            document.getElementById('events-view').style.display = 'none';
         }
 
-        // Выпадающее меню статей
+        function showEvents() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('events-view').style.display = 'block';
+            loadEvents();
+        }
+
         function toggleArticles() {
-            document.getElementById('articles-menu').classList.toggle('active');
+            document.getElementById('articles-list').classList.toggle('active');
         }
 
-        // Закрытие меню при клике вне
-        window.onclick = function(event) {
-            if (!event.target.matches('.nav-btn')) {
-                document.getElementById('articles-menu').classList.remove('active');
+        // Загрузка событий
+        async function loadEvents() {
+            const container = document.getElementById('events-container');
+            try {
+                const res = await fetch(`${API_URL}/api/events`);
+                const data = await res.json();
+                container.innerHTML = '';
+                
+                data.events.forEach(ev => {
+                    const card = document.createElement('div');
+                    card.className = 'event-card';
+                    card.innerHTML = `
+                        ${ev.photo ? `<img src="${ev.photo}" class="event-img">` : '<div class="event-img"></div>'}
+                        <div class="event-body">
+                            <span class="event-date">${ev.date}</span>
+                            <h3>${ev.name}</h3>
+                            <p style="font-size:14px; color:666; margin-top:5px">${ev.description}</p>
+                            <button class="btn-reg" onclick="openModal(${ev.id})">Записаться</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (e) {
+                container.innerHTML = 'Ошибка загрузки. Проверьте сервер бота.';
             }
         }
 
-        // Анимация при скролле (Intersection Observer)
-        function initScrollReveal() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
+        // Регистрация
+        function openModal(id) {
+            currentEventId = id;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        async function submitReg() {
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const user_id = tg.initDataUnsafe?.user?.id || 0;
+
+            if(!name || !phone) return alert('Заполните поля');
+
+            try {
+                const res = await fetch(`${API_URL}/api/register`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        user_id, event_id: currentEventId, name, phone
+                    })
                 });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+                const result = await res.json();
+                if(result.success) {
+                    alert(result.message);
+                    closeModal();
+                } else {
+                    alert(result.error);
+                }
+            } catch (e) {
+                alert('Ошибка сервера');
+            }
         }
 
-        // Заглушка для регистрации
-        function registerEvent(id) {
-            tg.showConfirm("Вы хотите записаться на мероприятие?", (ok) => {
-                if(ok) tg.showAlert("Заявка принята! Менеджер свяжется с вами.");
+        // Анимация при скролле
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
-        }
+        }, { threshold: 0.1 });
 
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', () => {
-            initScrollReveal();
-        });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
