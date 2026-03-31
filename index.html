@@ -2,164 +2,481 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartel Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Cartel - Трейдерский клуб</title>
     <style>
-        :root {
-            --bg-color: #f4f7f9;
-            --primary-blue: #1a237e;
-            --accent-orange: #ff6d00;
-            --text-dark: #212121;
-            --white: #ffffff;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
+        * {
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Шапка с логотипом */
-        header {
-            width: 100%;
-            padding: 15px 20px;
-            background: var(--white);
-            display: flex;
-            align-items: center;
             box-sizing: border-box;
-            border-bottom: 1px solid #e0e0e0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
-
-        .logo-btn {
-            height: 40px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .logo-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Контент */
-        .container {
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
-            max-width: 500px;
-            width: 100%;
-            box-sizing: border-box;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .header {
             text-align: center;
-        }
-
-        h1 {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--primary-blue);
-            line-height: 1.2;
-            margin-bottom: 20px;
-        }
-
-        span.accent {
-            color: var(--accent-orange);
-        }
-
-        .description {
-            font-size: 14px;
-            color: #555;
-            line-height: 1.5;
             margin-bottom: 30px;
-            background: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            color: white;
         }
-
-        /* Кнопки в стиле скриншота */
-        .btn-group {
-            display: grid;
-            gap: 15px;
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .event-card {
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .event-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .event-date {
+            color: #667eea;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .event-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .event-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
             width: 100%;
+            transition: transform 0.2s ease;
         }
-
-        .main-btn {
-            background-color: var(--primary-blue);
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-registered {
+            background: #4caf50;
+            opacity: 0.8;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
             color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 16px;
             font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
         }
-
-        .secondary-btn {
-            background-color: var(--accent-orange);
+        
+        .instagram {
+            background: linear-gradient(45deg, #f09433, #d62976, #962fbf);
+        }
+        
+        .youtube {
+            background: #ff0000;
+        }
+        
+        .telegram {
+            background: #0088cc;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-submit {
+            background: #667eea;
             color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
         }
-
-        .main-btn:hover { opacity: 0.9; }
+        
+        .btn-cancel {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .event-title {
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
-
-    <header>
-        <img src="image1.png" alt="Logo" class="logo-btn" onclick="goHome()">
-    </header>
-
-    <div class="container" id="app-content">
-        <div id="main-menu">
-            <h1>Cartel — глобальная сеть <span class="accent">роста и успеха!</span></h1>
-            
-            <div class="description">
-                Мы — сообщество трейдеров и инвесторов. Присоединяйтесь к 100,000+ участников по всему миру.
-            </div>
-
-            <div class="btn-group">
-                <button class="main-btn" onclick="showEvents()">Ближайшие ивенты</button>
-                <button class="secondary-btn" onclick="Telegram.WebApp.openLink('https://t.me/cartel_info')">Наш Telegram</button>
+    <div class="container">
+        <div class="header">
+            <h1>🤝 Cartel Club</h1>
+            <p>Международный клуб трейдеров, инвесторов и предпринимателей</p>
+        </div>
+        
+        <div class="card">
+            <h3 style="margin-bottom: 15px;">📱 Социальные сети</h3>
+            <div class="social-links">
+                <a href="https://www.instagram.com/cartel_fx/" class="social-btn instagram" target="_blank">
+                    📷 Instagram
+                </a>
+                <a href="https://www.youtube.com/@user-ry6hs4wt7h/videos" class="social-btn youtube" target="_blank">
+                    ▶️ YouTube
+                </a>
+                <a href="https://t.me/cartel_info" class="social-btn telegram" target="_blank">
+                    💬 Telegram
+                </a>
             </div>
         </div>
-
-        <div id="events-page" style="display:none;">
-            <h1>Доступные <span class="accent">мероприятия</span></h1>
-            <div id="events-list"></div>
-            <button class="main-btn" style="margin-top:20px; background:#666;" onclick="goHome()">Назад</button>
+        
+        <div class="card">
+            <h3 style="margin-bottom: 15px;">📅 Ближайшие мероприятия</h3>
+            <div id="events-list">
+                <div class="loading">Загрузка мероприятий...</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 Cartel Club. Все права защищены.</p>
         </div>
     </div>
-
+    
+    <!-- Модальное окно регистрации -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3>📝 Регистрация на мероприятие</h3>
+            <div class="input-group">
+                <label>Ваше имя</label>
+                <input type="text" id="user-name" placeholder="Введите ваше имя">
+            </div>
+            <div class="input-group">
+                <label>Номер телефона</label>
+                <input type="tel" id="user-phone" placeholder="+7 (XXX) XXX-XX-XX">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-submit" onclick="submitRegistration()">Записаться</button>
+                <button class="btn-cancel" onclick="closeModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand(); // Развернуть на весь экран
-
-        function goHome() {
-            document.getElementById('main-menu').style.display = 'block';
-            document.getElementById('events-page').style.display = 'none';
+        let currentEventId = null;
+        let userData = null;
+        
+        // Получаем данные пользователя из Telegram WebApp
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            userData = tg.initDataUnsafe?.user;
         }
-
-        function showEvents() {
-            document.getElementById('main-menu').style.display = 'none';
-            document.getElementById('events-page').style.display = 'block';
-            // Тут можно сделать Fetch запрос к вашему API для получения events.json
+        
+        // Загрузка мероприятий
+        async function loadEvents() {
+            try {
+                const response = await fetch('/api/events');
+                const events = await response.json();
+                
+                const eventsList = document.getElementById('events-list');
+                
+                if (events.length === 0) {
+                    eventsList.innerHTML = '<div class="empty">📭 Мероприятия не запланированы</div>';
+                    return;
+                }
+                
+                eventsList.innerHTML = '';
+                
+                for (const event of events) {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = 'event-card card';
+                    eventDiv.style.marginBottom = '15px';
+                    
+                    // Проверяем, зарегистрирован ли пользователь
+                    let isRegistered = false;
+                    if (userData) {
+                        const checkResponse = await fetch('/api/check_registration', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                user_id: userData.id,
+                                event_id: event.id
+                            })
+                        });
+                        const checkResult = await checkResponse.json();
+                        isRegistered = checkResult.registered;
+                    }
+                    
+                    eventDiv.innerHTML = `
+                        <div class="event-title">📌 ${event.name}</div>
+                        <div class="event-date">📅 ${event.date}</div>
+                        <div class="event-description">${event.description}</div>
+                        <a href="${event.link}" class="event-link" target="_blank">🔗 Подробнее</a>
+                        <button class="btn ${isRegistered ? 'btn-registered' : ''}" 
+                                onclick="openRegistration(${event.id})"
+                                ${isRegistered ? 'disabled' : ''}>
+                            ${isRegistered ? '✓ Вы уже записаны' : '✍️ Записаться'}
+                        </button>
+                    `;
+                    
+                    eventsList.appendChild(eventDiv);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки мероприятий:', error);
+                document.getElementById('events-list').innerHTML = 
+                    '<div class="empty">❌ Ошибка загрузки мероприятий</div>';
+            }
         }
-
-        // Настройка главной кнопки TG
-        tg.MainButton.setText("ЗАКРЫТЬ ПРИЛОЖЕНИЕ");
-        tg.MainButton.show();
-        tg.MainButton.onClick(() => tg.close());
+        
+        // Открыть модальное окно регистрации
+        function openRegistration(eventId) {
+            if (!userData) {
+                showMessage('❌ Пожалуйста, откройте приложение через Telegram бота', 'error');
+                return;
+            }
+            
+            currentEventId = eventId;
+            document.getElementById('modal').style.display = 'flex';
+        }
+        
+        // Закрыть модальное окно
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('user-name').value = '';
+            document.getElementById('user-phone').value = '';
+            currentEventId = null;
+        }
+        
+        // Отправить регистрацию
+        async function submitRegistration() {
+            const name = document.getElementById('user-name').value.trim();
+            const phone = document.getElementById('user-phone').value.trim();
+            
+            if (!name) {
+                showMessage('❌ Пожалуйста, введите ваше имя', 'error');
+                return;
+            }
+            
+            if (!phone) {
+                showMessage('❌ Пожалуйста, введите номер телефона', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        user_id: userData.id,
+                        event_id: currentEventId,
+                        name: name,
+                        phone: phone
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('✅ ' + result.message, 'success');
+                    closeModal();
+                    loadEvents(); // Обновляем список мероприятий
+                    
+                    // Отправляем уведомление в Telegram
+                    if (tg) {
+                        tg.sendData(JSON.stringify({
+                            action: 'registered',
+                            event_id: currentEventId
+                        }));
+                    }
+                } else {
+                    showMessage('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка регистрации:', error);
+                showMessage('❌ Ошибка регистрации. Попробуйте позже.', 'error');
+            }
+        }
+        
+        // Показать всплывающее сообщение
+        function showMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.textContent = text;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+        
+        // Загружаем мероприятия при открытии
+        loadEvents();
+        
+        // Обновляем мероприятия каждые 30 секунд
+        setInterval(loadEvents, 30000);
     </script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </body>
 </html>
