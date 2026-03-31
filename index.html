@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cartel Mini App</title>
+    <title>Cartel Club</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -11,7 +11,7 @@
             --bg-color: #f0f4f8;
             --text-main: #1a1a1a;
             --accent-blue: #4351ff;
-            --transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -24,129 +24,86 @@
             scroll-behavior: smooth;
         }
 
-        /* Header */
         header {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 65px;
-            background: rgba(240, 244, 248, 0.9);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 65px; background: rgba(240, 244, 248, 0.9);
+            backdrop-filter: blur(10px); display: flex;
+            align-items: center; padding: 0 15px; z-index: 1000;
             border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
-        .logo-img {
-            height: 35px;
-            cursor: pointer;
-            transition: transform 0.2s;
-            margin-right: 15px;
-        }
+        .logo-img { height: 35px; cursor: pointer; margin-right: 15px; }
 
         .nav-menu { display: flex; gap: 10px; position: relative; }
-
         .nav-btn {
-            background: none; border: none;
-            font-weight: 700; font-size: 14px;
-            color: var(--text-main); cursor: pointer;
+            background: none; border: none; font-weight: 700; 
+            font-size: 14px; color: var(--text-main); cursor: pointer;
             padding: 8px 12px; border-radius: 8px;
         }
 
-        /* Dropdown Articles */
         .articles-dropdown {
             position: absolute; top: 45px; left: 0;
             background: white; border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             width: 200px; opacity: 0; visibility: hidden;
-            transform: translateY(-10px); transition: 0.3s;
-            z-index: 1001;
+            transform: translateY(-10px); transition: 0.3s; z-index: 1001;
         }
-
         .articles-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .article-link { display: block; padding: 12px 20px; text-decoration: none; color: var(--text-main); font-size: 14px; border-bottom: 1px solid #f0f0f0; }
 
-        .article-link {
-            display: block; padding: 12px 20px;
-            text-decoration: none; color: var(--text-main);
-            font-size: 14px; border-bottom: 1px solid #f0f0f0;
-        }
-
-        /* Main Content */
         .container { max-width: 600px; margin: 0 auto; padding: 80px 20px 40px; }
 
-        .reveal { opacity: 0; transform: translateY(30px); transition: var(--transition); margin-bottom: 40px; }
+        .reveal { opacity: 0; transform: translateY(20px); transition: var(--transition); margin-bottom: 40px; }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
         .hero-title { font-weight: 900; font-size: 32px; line-height: 1.1; letter-spacing: -1px; }
-        
         .gradient-text {
             background: linear-gradient(90deg, #4351ff 0%, #8e44ad 50%, #ff6d2d 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .sub-text { font-size: 16px; color: #555; line-height: 1.6; }
-
-        /* Events Section */
-        #events-view { display: none; }
+        /* Мероприятия */
         .event-card {
             background: white; border-radius: 20px;
-            margin-bottom: 25px; overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+            margin-bottom: 20px; overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            cursor: pointer;
         }
-        .event-img { width: 100%; height: 180px; object-fit: cover; background: #ddd; }
+        .event-img { width: 100%; height: 200px; object-fit: cover; display: block; }
         .event-body { padding: 20px; }
         .event-date { color: var(--accent-blue); font-weight: 700; font-size: 13px; margin-bottom: 5px; display: block; }
-        .btn-reg {
-            width: 100%; padding: 15px; background: #ff6d2d;
-            color: white; border: none; border-radius: 12px;
-            font-weight: 700; cursor: pointer; margin-top: 15px;
+
+        .btn-primary {
+            width: 100%; padding: 16px; background: #ff6d2d;
+            color: white; border: none; border-radius: 14px;
+            font-weight: 700; cursor: pointer; font-size: 15px;
+        }
+        .btn-secondary {
+            width: 100%; padding: 12px; background: #f0f0f0;
+            color: #555; border: none; border-radius: 12px;
+            font-weight: 600; cursor: pointer; margin-top: 10px;
         }
 
-        /* Footer - Drawing Style Icons */
-        .footer { padding-top: 50px; border-top: 1px solid rgba(0,0,0,0.05); }
-        .footer-manager {
-            background: #0015ff; color: white; border-radius: 30px;
-            padding: 15px 25px; display: flex; justify-content: space-between;
-            text-decoration: none; font-weight: 700; margin: 20px 0;
-        }
-
-        .social-icons { display: flex; gap: 15px; margin-top: 20px; }
-        
-        .icon-box {
-            width: 50px; height: 50px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            text-decoration: none; transition: 0.3s;
-        }
+        /* Футер и иконки */
+        .social-icons { display: flex; gap: 12px; margin-top: 20px; }
+        .icon-box { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; }
         .ic-yt { background: #FF0000; color: white; }
         .ic-tg { background: #0088cc; color: white; }
-        .ic-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
-        .ic-fb { background: #1877F2; color: white; }
-
-        /* Modal */
-        .modal {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.6); z-index: 2000;
-            align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background: white; width: 90%; max-width: 350px;
-            padding: 30px; border-radius: 25px;
-        }
-        .modal input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            border: 1px solid #ddd; border-radius: 10px;
-        }
+        .ic-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; }
+        
+        /* Модалка */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: white; width: 100%; max-width: 340px; padding: 25px; border-radius: 24px; }
+        .modal input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #eee; border-radius: 12px; font-size: 16px; outline: none; }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="image1.png" alt="Cartel" class="logo-img" onclick="goHome()">
+        <img src="image1.png" class="logo-img" onclick="goHome()">
         <div class="nav-menu">
             <button class="nav-btn" onclick="toggleArticles()">Статьи</button>
-            <button class="nav-btn" onclick="showEvents()">Мероприятия</button>
+            <button class="nav-btn" onclick="showEventsList()">Мероприятия</button>
             <div id="articles-list" class="articles-dropdown">
                 <a href="https://statia1" class="article-link">Статья 1</a>
                 <a href="https://statia2" class="article-link">Статья 2</a>
@@ -158,157 +115,168 @@
     </header>
 
     <div class="container">
-        <!-- Главный экран -->
+        <!-- ГЛАВНАЯ -->
         <div id="home-view">
             <div class="reveal hero-title">
                 Cartel — международный клуб трейдеров, инвесторов и предпринимателей, <span class="gradient-text">стремящихся к финансовому росту и успеху!</span>
             </div>
-            
-            <div class="reveal sub-text">
+            <div class="reveal" style="font-size: 16px; color: #555; line-height: 1.6;">
                 Мы объединяем более 100 000 участников со всего мира — от новичков до профессионалов — для того, чтобы создавать успешные стратегии, обмениваться опытом и развиваться вместе.
             </div>
-
-            <div class="reveal sub-text" style="font-weight: 700; color: #000;">
+            <div class="reveal" style="font-weight: 700; color: #000; margin-top: -20px;">
                 Наш клуб — это не просто площадка для общения, это мощный инструмент для вашего роста и стабильных доходов.
             </div>
 
-            <div class="reveal footer">
-                <p style="font-size: 14px; opacity: 0.7;">Наш менеджер ответит на твои вопросы:</p>
-                <a href="https://t.me/manager_cartelmarket" class="footer-manager">Telegram <span>↗</span></a>
-
-                <p style="font-size: 14px; opacity: 0.7; margin-top: 30px;">Мы в соцсетях:</p>
+            <div class="reveal" style="border-top: 1px solid #ddd; padding-top: 30px;">
+                <p style="font-size: 13px; opacity: 0.6;">Связаться с менеджером:</p>
+                <a href="https://t.me/manager_cartelmarket" style="background:#0015ff; color:white; border-radius:30px; padding:16px 25px; display:flex; justify-content:space-between; text-decoration:none; font-weight:700; margin:15px 0;">Telegram <span>↗</span></a>
+                
+                <p style="font-size: 13px; opacity: 0.6; margin-top: 25px;">Наши соцсети:</p>
                 <div class="social-icons">
-                    <a href="https://YouTube" class="icon-box ic-yt">
-                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg>
-                    </a>
-                    <a href="https://t.me/cartel_info" class="icon-box ic-tg">
-                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg>
-                    </a>
-                    <a href="https://www.instagram.com/cartel_fx/" class="icon-box ic-ig">
-                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2zm5.2-9.3c.6 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2-1.2-.5-1.2-1.2.5-1.2 1.2-1.2z"/></svg>
-                    </a>
-                    <a href="#" class="icon-box ic-fb">
-                        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.5V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg>
-                    </a>
+                    <a href="https://YouTube" class="icon-box ic-yt"><svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg></a>
+                    <a href="https://t.me/cartel_info" class="icon-box ic-tg"><svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg></a>
+                    <a href="https://www.instagram.com/cartel_fx/" class="icon-box ic-ig"><svg width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2zm5.2-9.3c.6 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2-1.2-.5-1.2-1.2.5-1.2 1.2-1.2z"/></svg></a>
                 </div>
             </div>
         </div>
 
-        <!-- Экран мероприятий -->
-        <div id="events-view">
+        <!-- СПИСОК МЕРОПРИЯТИЙ -->
+        <div id="events-list-view" style="display:none">
             <h2 style="margin-bottom: 25px; font-weight: 900;">Мероприятия</h2>
-            <div id="events-container">
-                <p>Загрузка...</p>
-            </div>
+            <div id="events-container">Загрузка...</div>
+        </div>
+
+        <!-- ДЕТАЛИ МЕРОПРИЯТИЯ -->
+        <div id="event-detail-view" style="display:none">
+            <div id="detail-content"></div>
         </div>
     </div>
 
-    <!-- Модалка -->
+    <!-- МОДАЛКА -->
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-bottom: 10px;">Запись</h3>
-            <input type="text" id="reg-name" placeholder="Ваше имя">
+            <h3 style="margin-bottom: 15px;">Регистрация</h3>
+            <input type="text" id="reg-name" placeholder="Твое имя">
             <input type="tel" id="reg-phone" placeholder="Номер телефона">
-            <button class="btn-reg" onclick="submitReg()">Записаться</button>
-            <button class="nav-btn" style="width:100%; margin-top:10px" onclick="closeModal()">Отмена</button>
+            <button class="btn-primary" onclick="submitRegistration()">Записаться</button>
+            <button class="btn-secondary" onclick="closeModal()">Отмена</button>
         </div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+        const API_URL = "http://localhost:8080"; 
+        
+        let allEvents = [];
+        let currentActiveEventId = null;
 
-        const API_URL = "http://localhost:8080"; // Измени на свой URL если сервер не локально
-        let currentEventId = null;
-
-        // Навигация
-        function goHome() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            document.getElementById('home-view').style.display = 'block';
-            document.getElementById('events-view').style.display = 'none';
+        function hideAll() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('events-list-view').style.display = 'none';
+            document.getElementById('event-detail-view').style.display = 'none';
+            document.getElementById('articles-list').classList.remove('active');
         }
 
-        function showEvents() {
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('events-view').style.display = 'block';
-            loadEvents();
+        function goHome() {
+            hideAll();
+            document.getElementById('home-view').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        async function showEventsList() {
+            hideAll();
+            document.getElementById('events-list-view').style.display = 'block';
+            const container = document.getElementById('events-container');
+            
+            try {
+                const res = await fetch(`${API_URL}/api/events`);
+                const data = await res.json();
+                allEvents = data.events;
+                container.innerHTML = '';
+
+                if (allEvents.length === 0) {
+                    container.innerHTML = '<p>Пока нет активных мероприятий.</p>';
+                    return;
+                }
+
+                allEvents.forEach(ev => {
+                    const card = document.createElement('div');
+                    card.className = 'event-card';
+                    card.onclick = () => showDetail(ev.id);
+                    
+                    // УСЛОВИЕ: Показываем картинку только если она есть
+                    let photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img">` : '';
+                    
+                    card.innerHTML = `
+                        ${photoHtml}
+                        <div class="event-body">
+                            <span class="event-date">${ev.date}</span>
+                            <h3 style="font-weight:800">${ev.name}</h3>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (e) {
+                container.innerHTML = 'Ошибка подключения к боту.';
+            }
+        }
+
+        function showDetail(id) {
+            hideAll();
+            const ev = allEvents.find(x => x.id === id);
+            currentActiveEventId = id;
+            const detailView = document.getElementById('event-detail-view');
+            const content = document.getElementById('detail-content');
+            
+            detailView.style.display = 'block';
+            
+            let photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img" style="border-radius:20px; margin-bottom:20px">` : '';
+
+            content.innerHTML = `
+                ${photoHtml}
+                <span class="event-date">${ev.date}</span>
+                <h2 style="font-weight:900; margin-bottom:15px">${ev.name}</h2>
+                <p style="line-height:1.6; color:#444; margin-bottom:30px">${ev.description}</p>
+                <button class="btn-primary" onclick="openModal()">✍️ Записаться</button>
+                <button class="btn-secondary" onclick="showEventsList()">◀️ Назад к списку</button>
+            `;
+            window.scrollTo(0,0);
         }
 
         function toggleArticles() {
             document.getElementById('articles-list').classList.toggle('active');
         }
 
-        // Загрузка событий
-        async function loadEvents() {
-            const container = document.getElementById('events-container');
-            try {
-                const res = await fetch(`${API_URL}/api/events`);
-                const data = await res.json();
-                container.innerHTML = '';
-                
-                data.events.forEach(ev => {
-                    const card = document.createElement('div');
-                    card.className = 'event-card';
-                    card.innerHTML = `
-                        ${ev.photo ? `<img src="${ev.photo}" class="event-img">` : '<div class="event-img"></div>'}
-                        <div class="event-body">
-                            <span class="event-date">${ev.date}</span>
-                            <h3>${ev.name}</h3>
-                            <p style="font-size:14px; color:666; margin-top:5px">${ev.description}</p>
-                            <button class="btn-reg" onclick="openModal(${ev.id})">Записаться</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            } catch (e) {
-                container.innerHTML = 'Ошибка загрузки. Проверьте сервер бота.';
-            }
-        }
+        function openModal() { document.getElementById('modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-        // Регистрация
-        function openModal(id) {
-            currentEventId = id;
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        async function submitReg() {
+        async function submitRegistration() {
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             const user_id = tg.initDataUnsafe?.user?.id || 0;
 
-            if(!name || !phone) return alert('Заполните поля');
+            if(!name || !phone) { alert('Заполни все поля'); return; }
 
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        user_id, event_id: currentEventId, name, phone
-                    })
+                    body: JSON.stringify({ user_id, event_id: currentActiveEventId, name, phone })
                 });
                 const result = await res.json();
                 if(result.success) {
-                    alert(result.message);
+                    tg.showAlert(result.message);
                     closeModal();
                 } else {
-                    alert(result.error);
+                    tg.showAlert(result.error);
                 }
-            } catch (e) {
-                alert('Ошибка сервера');
-            }
+            } catch (e) { alert('Ошибка связи с сервером'); }
         }
 
-        // Анимация при скролле
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
         }, { threshold: 0.1 });
-
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
