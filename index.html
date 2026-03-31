@@ -18,7 +18,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); scroll-behavior: smooth; overflow-x: hidden; }
 
         header {
             position: fixed; top: 0; left: 0; right: 0;
@@ -28,7 +28,7 @@
             border-bottom: 1px solid var(--frame-blue);
         }
 
-        /* УМЕНЬШЕНО: Логотип стал меньше */
+        /* УМЕНЬШЕНО: Логотип 30px */
         .logo-img { height: 30px; cursor: pointer; transition: 0.2s; }
         .logo-img:active { transform: scale(0.9); }
 
@@ -57,7 +57,7 @@
         .hero-title { font-weight: 900; font-size: 28px; line-height: 1.15; letter-spacing: -1px; }
         .gradient-text { background: linear-gradient(90deg, #4351ff 0%, #a855f7 50%, #ff6d2d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* КАРТОЧКИ */
+        /* КАРТОЧКИ С СИНЕЙ РАМКОЙ */
         .event-card {
             background: #ffffff; border: 2px solid var(--frame-blue);
             border-radius: 22px; margin-bottom: 25px; overflow: hidden;
@@ -72,14 +72,17 @@
             color: white; border: none; border-radius: 14px;
             font-weight: 800; cursor: pointer; font-size: 15px; transition: 0.2s;
         }
-        .btn-main.registered { background: var(--accent-green); cursor: default; }
+        /* Стиль для кнопки "Вы записаны" */
+        .btn-main.registered { background: var(--accent-green) !important; cursor: default; }
 
         .btn-back { width: 100%; padding: 12px; background: #fff; color: #64748b; border: 1px solid var(--frame-blue); border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-        /* Соцсети */
+        /* Соцсети отрисованные */
         .social-row { display: flex; gap: 12px; margin-top: 20px; }
         .draw-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; }
-        .draw-yt { background: #ff0000; } .draw-tg { background: #24a1de; } .draw-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
+        .draw-yt { background: #ff0000; } 
+        .draw-tg { background: #24a1de; } 
+        .draw-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(26, 30, 46, 0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 100%; max-width: 340px; padding: 25px; border-radius: 25px; border: 2px solid var(--frame-blue); }
@@ -109,9 +112,9 @@
                 Cartel — международный клуб трейдеров, инвесторов и предпринимателей, <span class="gradient-text">стремящихся к финансовому росту и успеху!</span>
             </div>
             <div class="reveal" style="font-size: 16px; color: #475569; line-height: 1.6;">
-                Мы объединяем более 100 000 участников со всего мира.
+                Мы объединяем более 100 000 участников со всего мира. Наш клуб — это не просто площадка для общения, это мощный инструмент для вашего роста.
             </div>
-            <!-- Футер и соцсети пропущены для краткости, они остаются такими же -->
+
              <div class="social-row reveal">
                 <a href="https://YouTube" class="draw-icon draw-yt"><svg width="24" height="24" fill="white" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg></a>
                 <a href="https://t.me/cartel_info" class="draw-icon draw-tg"><svg width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg></a>
@@ -142,10 +145,17 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
+        tg.headerColor = "#f4f7ff";
         
-        // ВАЖНО: Замени localhost на свой IP (например 192.168.1.10) или ngrok ссылку
+        // ССЫЛКА NGROK
         const API_URL = "https://unlubricating-healthily-alfreda.ngrok-free.dev"; 
         
+        // Заголовки для обхода браузерного предупреждения ngrok на телефоне
+        const fetchHeaders = {
+            'ngrok-skip-browser-warning': '69420',
+            'Content-Type': 'application/json'
+        };
+
         let allEvents = [];
         let currentActiveEventId = null;
         let eventAddress = "ADRES";
@@ -170,17 +180,23 @@
             const userId = tg.initDataUnsafe?.user?.id || 0;
             
             try {
-                const res = await fetch(`${API_URL}/api/events`);
+                // Получаем события
+                const res = await fetch(`${API_URL}/api/events`, { headers: fetchHeaders });
                 const data = await res.json();
                 allEvents = data.events;
                 eventAddress = data.address || "ADRES";
                 container.innerHTML = '';
 
+                if (!allEvents || allEvents.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding:20px; color:#94a3b8;">Мероприятий пока нет.</div>';
+                    return;
+                }
+
                 for (let ev of allEvents) {
-                    // Проверяем запись
+                    // ПРОВЕРКА: Записан ли пользователь?
                     const checkRes = await fetch(`${API_URL}/api/check`, {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
+                        headers: fetchHeaders,
                         body: JSON.stringify({ user_id: userId, event_id: ev.id })
                     });
                     const checkData = await checkRes.json();
@@ -189,7 +205,7 @@
                     const card = document.createElement('div');
                     card.className = 'event-card';
                     
-                    // ФОТО: исправленный путь
+                    // Фото (берем через туннель)
                     const photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img" onclick="showDetail(${ev.id})">` : '';
                     
                     card.innerHTML = `
@@ -206,7 +222,8 @@
                     container.appendChild(card);
                 }
             } catch (e) {
-                container.innerHTML = '<div style="color:red">Ошибка. Убедитесь, что сервер запущен.</div>';
+                console.error(e);
+                container.innerHTML = '<div style="color:red; text-align:center; padding:20px;">Ошибка связи с сервером. Проверьте туннель.</div>';
             }
         }
 
@@ -241,24 +258,24 @@
             const userId = tg.initDataUnsafe?.user?.id || 0;
             const ev = allEvents.find(x => x.id === currentActiveEventId);
 
-            if(!name || !phone) { alert('Заполни поля'); return; }
+            if(!name || !phone) { alert('Заполните поля'); return; }
 
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ user_id: userId, event_id: currentActiveEventId, name, phone })
+                    headers: fetchHeaders,
+                    body: JSON.stringify({ user_id: userId, event_id: currentActiveEventId, name: name, phone: phone })
                 });
                 const result = await res.json();
                 if(result.success) {
-                    // ИСПРАВЛЕНО: Текст благодарности
+                    // ТЕКСТ БЛАГОДАРНОСТИ ИЗ ЗАПРОСА
                     tg.showAlert(`Вы записались! ждем вас ${ev.date} в 12:00 по адресу: ${eventAddress}`);
                     closeModal();
-                    showEventsList();
+                    showEventsList(); // Обновляем список, чтобы кнопка стала зеленой
                 } else {
                     tg.showAlert(result.error);
                 }
-            } catch (e) { alert('Ошибка сервера'); }
+            } catch (e) { alert('Ошибка на стороне сервера'); }
         }
 
         const observer = new IntersectionObserver((entries) => {
