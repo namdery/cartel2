@@ -35,7 +35,6 @@
             border-bottom: 1px solid var(--frame-blue);
         }
 
-        /* Картинка чуть меньше (была 38px) */
         .logo-img { height: 33px; cursor: pointer; transition: 0.2s; }
         .logo-img:active { transform: scale(0.95); }
 
@@ -83,7 +82,9 @@
             border-radius: 24px; margin-bottom: 25px; overflow: hidden;
             box-shadow: 0 8px 20px rgba(67, 81, 255, 0.05);
             transition: 0.3s;
+            cursor: pointer;
         }
+        .event-card:active { transform: scale(0.98); }
         .event-img { width: 100%; height: 210px; object-fit: cover; display: block; background: #eef2ff; }
         .event-body { padding: 24px; }
         .event-date-box { 
@@ -107,13 +108,38 @@
             background: #cbd5e1;
             color: #64748b;
             box-shadow: none;
+            cursor: default;
         }
+        .btn-main.registered:active { transform: none; opacity: 1; }
 
         .btn-back {
             width: 100%; padding: 14px; background: #ffffff;
             color: #64748b; border: 1px solid var(--frame-blue); border-radius: 14px;
             font-weight: 700; cursor: pointer; margin-top: 12px;
             display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
+        /* Инфо-блок для записанных */
+        .registered-info {
+            background: linear-gradient(135deg, #e8f0ff 0%, #f0f4ff 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--frame-blue);
+        }
+        .registered-info p {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+        .registered-info p:last-child {
+            margin-bottom: 0;
+        }
+        .registered-info strong {
+            color: var(--accent-blue);
         }
 
         /* Соцсети */
@@ -223,18 +249,12 @@
             window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // Функция для показа алерта, если уже записан
-        function showAlreadyRegisteredAlert(date) {
-            tg.showAlert(`Вы уже записаны, ждем вас ${date} в 12:00 по адресу: г. Москва, ул. Трейдеров 1`);
-        }
-
         async function showEventsList() {
             hideAll();
             document.getElementById('events-list-view').style.display = 'block';
             const container = document.getElementById('events-container');
             
             try {
-                // Передаем user_id чтобы сервер знал, кто запрашивает список и пометил регистрации
                 const userId = tg.initDataUnsafe?.user?.id || 0;
                 const res = await fetch(`${API_URL}/api/events?user_id=${userId}`);
                 const data = await res.json();
@@ -249,18 +269,11 @@
                 allEvents.forEach(ev => {
                     const card = document.createElement('div');
                     card.className = 'event-card';
+                    card.onclick = () => showDetail(ev.id);
                     
                     // Фотография из API
-                    const photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img" onclick="showDetail(${ev.id})">` : '';
+                    const photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img">` : '';
                     
-                    // Проверка регистрации
-                    let buttonHtml = '';
-                    if(ev.is_registered) {
-                        buttonHtml = `<button class="btn-main registered" onclick="showAlreadyRegisteredAlert('${ev.date}')">Вы уже записаны</button>`;
-                    } else {
-                        buttonHtml = `<button class="btn-main" onclick="triggerReg(${ev.id})">Записаться</button>`;
-                    }
-
                     card.innerHTML = `
                         ${photoHtml}
                         <div class="event-body">
@@ -268,8 +281,7 @@
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                                 ${ev.date}
                             </div>
-                            <h3 style="font-weight:900; font-size:20px; margin-bottom:15px; cursor:pointer" onclick="showDetail(${ev.id})">${ev.name}</h3>
-                            ${buttonHtml}
+                            <h3 style="font-weight:900; font-size:20px; margin-bottom:15px">${ev.name}</h3>
                         </div>
                     `;
                     container.appendChild(card);
@@ -282,53 +294,99 @@
         function showDetail(id) {
             hideAll();
             const ev = allEvents.find(x => x.id === id);
+            if (!ev) return;
+            
             currentActiveEventId = id;
             const content = document.getElementById('detail-content');
             document.getElementById('event-detail-view').style.display = 'block';
             
             const photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img" style="border-radius:24px; margin-bottom:20px">` : '';
 
-            // Кнопка для детального вида
-            let mainBtnHtml = '';
-            if(ev.is_registered) {
-                mainBtnHtml = `<button class="btn-main registered" onclick="showAlreadyRegisteredAlert('${ev.date}')">Вы уже записаны</button>`;
+            // Определяем статус регистрации
+            const isRegistered = ev.is_registered;
+            
+            let mainButtonHtml = '';
+            let registeredInfoHtml = '';
+            
+            if (isRegistered) {
+                // Если записан - показываем информационный блок и неактивную кнопку
+                mainButtonHtml = `<button class="btn-main registered">✓ Вы уже записаны</button>`;
+                registeredInfoHtml = `
+                    <div class="registered-info">
+                        <p>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4351ff" stroke-width="2">
+                                <path d="M20 12V8H4v12h16v-4" stroke="currentColor" stroke-linecap="round"/>
+                                <circle cx="12" cy="12" r="8" stroke="currentColor"/>
+                                <path d="M12 8v4l3 3" stroke="currentColor" stroke-linecap="round"/>
+                            </svg>
+                            <strong>Мероприятие состоится ${ev.date} в 12:00</strong>
+                        </p>
+                        <p>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4351ff" stroke-width="2">
+                                <path d="M12 2v4M4.93 4.93l2.83 2.83M2 12h4M4.93 19.07l2.83-2.83M12 22v-4M19.07 19.07l-2.83-2.83M22 12h-4M19.07 4.93l-2.83 2.83" stroke="currentColor"/>
+                                <circle cx="12" cy="12" r="3" stroke="currentColor"/>
+                            </svg>
+                            <strong>Адрес:</strong> г. Москва, ул. Трейдеров 1
+                        </p>
+                    </div>
+                `;
             } else {
-                mainBtnHtml = `<button class="btn-main" onclick="openModal()">Записаться на встречу</button>`;
+                // Если не записан - показываем кнопку записи
+                mainButtonHtml = `<button class="btn-main" onclick="openModal()">Записаться на встречу</button>`;
             }
 
             content.innerHTML = `
                 ${photoHtml}
-                <div class="event-date-box">${ev.date}</div>
+                <div class="event-date-box">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    ${ev.date}
+                </div>
                 <h2 style="font-weight:900; font-size:28px; margin-bottom:15px">${ev.name}</h2>
                 <div style="line-height:1.7; color:#475569; font-size:16px; margin-bottom:35px">${ev.description}</div>
                 
-                ${mainBtnHtml}
+                ${registeredInfoHtml}
+                ${mainButtonHtml}
+                
                 <button class="btn-back" onclick="showEventsList()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
                     Назад к списку
                 </button>
             `;
             window.scrollTo(0,0);
         }
 
-        function triggerReg(id) {
-            currentActiveEventId = id;
-            openModal();
-        }
-
         function toggleArticles() {
             document.getElementById('articles-list').classList.toggle('active');
         }
 
-        function openModal() { document.getElementById('modal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        function openModal() { 
+            if (!currentActiveEventId) return;
+            document.getElementById('modal').style.display = 'flex'; 
+        }
+        
+        function closeModal() { 
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('reg-name').value = '';
+            document.getElementById('reg-phone').value = '';
+        }
 
         async function submitRegistration() {
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             const user_id = tg.initDataUnsafe?.user?.id || 0;
 
-            if(!name || !phone) { alert('Заполни все поля'); return; }
+            if(!name || !phone) { 
+                tg.showAlert('Заполни все поля'); 
+                return; 
+            }
 
             try {
                 const res = await fetch(`${API_URL}/api/register`, {
@@ -340,11 +398,19 @@
                 if(result.success) {
                     tg.showAlert(result.message);
                     closeModal();
-                    showEventsList(); // Обновляем список, чтобы кнопка изменилась
+                    // Обновляем статус регистрации в allEvents
+                    const eventIndex = allEvents.findIndex(e => e.id === currentActiveEventId);
+                    if (eventIndex !== -1) {
+                        allEvents[eventIndex].is_registered = true;
+                    }
+                    // Перезагружаем детальную страницу с обновленными данными
+                    showDetail(currentActiveEventId);
                 } else {
-                    tg.showAlert(result.error);
+                    tg.showAlert(result.error || 'Ошибка при регистрации');
                 }
-            } catch (e) { alert('Ошибка сервера'); }
+            } catch (e) { 
+                tg.showAlert('Ошибка сервера'); 
+            }
         }
 
         const observer = new IntersectionObserver((entries) => {
