@@ -181,11 +181,11 @@
             <button class="nav-btn" onclick="toggleArticles()">Статьи</button>
             <button class="nav-btn" onclick="showEventsList()">Мероприятия</button>
             <div id="articles-list" class="articles-dropdown">
-                <a href="https://statia1" class="article-link">Как начать торговать: полный гайд для новичков</a>
-                <a href="https://statia2" class="article-link">Топ-5 стратегий успешных трейдеров</a>
-                <a href="https://statia3" class="article-link">Управление капиталом: главные правила</a>
-                <a href="https://statia4" class="article-link">Психология трейдинга: как контролировать эмоции</a>
-                <a href="https://statia5" class="article-link">Криптовалюты: тренды 2026 года</a>
+                <a href="https://statia1" class="article-link">Статья 1</a>
+                <a href="https://statia2" class="article-link">Статья 2</a>
+                <a href="https://statia3" class="article-link">Статья 3</a>
+                <a href="https://statia4" class="article-link">Статья 4</a>
+                <a href="https://statia5" class="article-link">Статья 5</a>
             </div>
         </div>
     </header>
@@ -231,8 +231,8 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 10px; font-weight: 900;">Регистрация</h3>
-            <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">Заполни данные для записи</p>
-            <input type="text" id="reg-name" placeholder="Твое имя">
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 10px;">Заполните данные для записи</p>
+            <input type="text" id="reg-name" placeholder="Ваше имя">
             <input type="tel" id="reg-phone" placeholder="Номер телефона">
             <button class="btn-main" onclick="submitRegistration()">Записаться</button>
             <button class="btn-back" style="border:none" onclick="closeModal()">Отмена</button>
@@ -248,26 +248,26 @@
         let allEvents = [];
         let currentActiveEventId = null;
         
-        // Ключ для хранения регистраций в localStorage
+
         const getStorageKey = () => {
             const userId = tg.initDataUnsafe?.user?.id || 'default_user';
             return `cartel_registrations_${userId}`;
         };
 
-        // Сохранение регистраций в localStorage
+
         function saveRegistrations(registeredEventIds) {
             const key = getStorageKey();
             localStorage.setItem(key, JSON.stringify(registeredEventIds));
         }
 
-        // Загрузка регистраций из localStorage
+
         function loadRegistrations() {
             const key = getStorageKey();
             const saved = localStorage.getItem(key);
             return saved ? JSON.parse(saved) : [];
         }
 
-        // Обновление статуса регистрации в allEvents на основе localStorage
+
         function updateRegistrationStatusFromStorage() {
             const registeredIds = loadRegistrations();
             allEvents.forEach(event => {
@@ -287,7 +287,7 @@
                 const data = await res.json();
                 allEvents = data.events;
                 
-                // Восстанавливаем статус регистрации из localStorage
+
                 updateRegistrationStatusFromStorage();
                 
                 container.innerHTML = '';
@@ -321,7 +321,7 @@
                 });
             } catch (e) {
                 console.error(e);
-                container.innerHTML = '<div style="color:red; text-align:center">Ошибка загрузки мероприятий. Проверьте подключение к серверу.</div>';
+                container.innerHTML = '<div style="color:red; text-align:center">Ошибка.</div>';
             }
         }
 
@@ -340,22 +340,17 @@
             let waitingHtml = '';
             
             if (isRegistered) {
-                buttonHtml = `<button class="btn-main registered">✓ Вы уже записаны</button>`;
+                buttonHtml = `<button class="btn-main registered">Вы уже записаны</button>`;
                 waitingHtml = `
-                    <div class="waiting-message">
-                        <p>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4351ff" stroke-width="2">
-                                <path d="M20 12V8H4v12h16v-4" stroke="currentColor" stroke-linecap="round"/>
-                                <circle cx="12" cy="12" r="8" stroke="currentColor"/>
-                                <path d="M12 8v4l3 3" stroke="currentColor" stroke-linecap="round"/>
-                            </svg>
-                            <strong>Ждем вас ${ev.date} в 12:00 по адресу:</strong>
-                        </p>
-                        <p style="margin-top: 8px; font-size: 14px;">г. Москва, ул. Трейдеров 1</p>
-                    </div>
-                `;
+    <div class="waiting-message">
+        <p>
+            <strong>Ждем вас ${ev.date} в 12:00 по адресу:</strong>
+        </p>
+        <p style="margin-top: 8px; font-size: 14px;">г. Москва, ул. Трейдеров 1</p>
+    </div>
+`;
             } else {
-                buttonHtml = `<button class="btn-main" onclick="openModal()">Записаться на встречу</button>`;
+                buttonHtml = `<button class="btn-main" onclick="openModal()">Записаться на мероприятие</button>`;
             }
 
             content.innerHTML = `
@@ -378,7 +373,7 @@
                             <polyline points="15 3 21 3 21 9" stroke="currentColor"/>
                             <line x1="10" y1="14" x2="21" y2="3" stroke="currentColor"/>
                         </svg>
-                        ${ev.link || 'Ссылка на мероприятие'}
+                        ${ev.link || 'Ссылка'}
                     </a>
                 </div>
                 
@@ -442,14 +437,13 @@
                 });
                 const result = await res.json();
                 if(result.success) {
-                    // Сохраняем регистрацию в localStorage
+
                     const registeredIds = loadRegistrations();
                     if (!registeredIds.includes(currentActiveEventId)) {
                         registeredIds.push(currentActiveEventId);
                         saveRegistrations(registeredIds);
                     }
                     
-                    // Обновляем статус в allEvents
                     const eventIndex = allEvents.findIndex(e => e.id === currentActiveEventId);
                     if (eventIndex !== -1) {
                         allEvents[eventIndex].is_registered = true;
@@ -462,17 +456,16 @@
                     tg.showAlert(result.error || 'Ошибка при регистрации');
                 }
             } catch (e) { 
-                tg.showAlert('Ошибка сервера'); 
+                tg.showAlert('Ошибка'); 
             }
         }
 
-        // При загрузке страницы проверяем localStorage и синхронизируем с сервером
         async function syncRegistrationsWithServer() {
             const registeredIds = loadRegistrations();
             if (registeredIds.length === 0) return;
             
             const userId = tg.initDataUnsafe?.user?.id || 0;
-            // Отправляем синхронизацию на сервер
+
             for (const eventId of registeredIds) {
                 try {
                     await fetch(`${API_URL}/api/sync-registration`, {
@@ -486,7 +479,6 @@
             }
         }
 
-        // Запускаем синхронизацию при загрузке
         syncRegistrationsWithServer();
 
         const observer = new IntersectionObserver((entries) => {
