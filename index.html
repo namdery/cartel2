@@ -248,30 +248,47 @@
         let allEvents = [];
         let currentActiveEventId = null;
         
-
+        // Ключ для хранения регистраций в localStorage
         const getStorageKey = () => {
             const userId = tg.initDataUnsafe?.user?.id || 'default_user';
             return `cartel_registrations_${userId}`;
         };
 
-
+        // Сохранение регистраций в localStorage
         function saveRegistrations(registeredEventIds) {
             const key = getStorageKey();
             localStorage.setItem(key, JSON.stringify(registeredEventIds));
         }
 
-
+        // Загрузка регистраций из localStorage
         function loadRegistrations() {
             const key = getStorageKey();
             const saved = localStorage.getItem(key);
             return saved ? JSON.parse(saved) : [];
         }
 
-
-        function updateRegistrationStatusFromStorage() {
+        // Очистка устаревших регистраций (которых нет в актуальном списке мероприятий)
+        function cleanStaleRegistrations() {
             const registeredIds = loadRegistrations();
+            const existingEventIds = allEvents.map(event => event.id);
+            
+            // Оставляем только те ID, которые есть в актуальном списке мероприятий
+            const validRegistrations = registeredIds.filter(id => existingEventIds.includes(id));
+            
+            // Если были удалены какие-то регистрации, сохраняем обновленный список
+            if (validRegistrations.length !== registeredIds.length) {
+                saveRegistrations(validRegistrations);
+                console.log('Удалены устаревшие регистрации:', registeredIds.filter(id => !existingEventIds.includes(id)));
+            }
+            
+            return validRegistrations;
+        }
+
+        // Обновление статуса регистрации в allEvents на основе localStorage (с очисткой устаревших)
+        function updateRegistrationStatusFromStorage() {
+            const validRegistrations = cleanStaleRegistrations();
             allEvents.forEach(event => {
-                event.is_registered = registeredIds.includes(event.id);
+                event.is_registered = validRegistrations.includes(event.id);
             });
         }
 
@@ -287,7 +304,7 @@
                 const data = await res.json();
                 allEvents = data.events;
                 
-
+                // Обновляем статус регистрации (автоматически очищает устаревшие)
                 updateRegistrationStatusFromStorage();
                 
                 container.innerHTML = '';
@@ -342,13 +359,13 @@
             if (isRegistered) {
                 buttonHtml = `<button class="btn-main registered">Вы уже записаны</button>`;
                 waitingHtml = `
-    <div class="waiting-message">
-        <p>
-            <strong>Ждем вас ${ev.date} в 12:00 по адресу:</strong>
-        </p>
-        <p style="margin-top: 8px; font-size: 14px;">г. Москва, ул. Трейдеров 1</p>
-    </div>
-`;
+                    <div class="waiting-message">
+                        <p>
+                            <strong>Ждем вас ${ev.date} в 12:00 по адресу:</strong>
+                        </p>
+                        <p style="margin-top: 8px; font-size: 14px;">г. Москва, ул. Трейдеров 1</p>
+                    </div>
+                `;
             } else {
                 buttonHtml = `<button class="btn-main" onclick="openModal()">Записаться на мероприятие</button>`;
             }
@@ -425,7 +442,7 @@
             const user_id = tg.initDataUnsafe?.user?.id || 0;
 
             if(!name || !phone) { 
-                tg.showAlert('Заполни все поля'); 
+                tg.showAlert('Заполните все поля'); 
                 return; 
             }
 
@@ -437,13 +454,14 @@
                 });
                 const result = await res.json();
                 if(result.success) {
-
+                    // Сохраняем регистрацию в localStorage
                     const registeredIds = loadRegistrations();
                     if (!registeredIds.includes(currentActiveEventId)) {
                         registeredIds.push(currentActiveEventId);
                         saveRegistrations(registeredIds);
                     }
                     
+                    // Обновляем статус в allEvents
                     const eventIndex = allEvents.findIndex(e => e.id === currentActiveEventId);
                     if (eventIndex !== -1) {
                         allEvents[eventIndex].is_registered = true;
@@ -465,20 +483,37 @@
             if (registeredIds.length === 0) return;
             
             const userId = tg.initDataUnsafe?.user?.id || 0;
-
-            for (const eventId of registeredIds) {
-                try {
-                    await fetch(`${API_URL}/api/sync-registration`, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ user_id: userId, event_id: eventId })
-                    });
-                } catch (e) {
-                    console.error('Sync error:', e);
+            
+            // Сначала получаем актуальный список мероприятий с сервера
+            try {
+                const res = await fetch(`${API_URL}/api/events?user_id=${userId}`);
+                const data = await res.json();
+                const existingEventIds = data.events.map(event => event.id);
+                
+                // Очищаем регистрации, которых нет на сервере
+                const validRegistrations = registeredIds.filter(id => existingEventIds.includes(id));
+                if (validRegistrations.length !== registeredIds.length) {
+                    saveRegistrations(validRegistrations);
                 }
+                
+                // Отправляем валидные регистрации на сервер для синхронизации
+                for (const eventId of validRegistrations) {
+                    try {
+                        await fetch(`${API_URL}/api/sync-registration`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ user_id: userId, event_id: eventId })
+                        });
+                    } catch (e) {
+                        console.error('Sync error:', e);
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to sync registrations:', e);
             }
         }
 
+        // Запускаем синхронизацию при загрузке
         syncRegistrationsWithServer();
 
         const observer = new IntersectionObserver((entries) => {
