@@ -248,16 +248,24 @@
         let allEvents = [];
         let currentActiveEventId = null;
         
+        // Функция для создания уникального хеша мероприятия на основе всех его данных
+        function getEventHash(event) {
+            // Создаем строку из всех значимых полей мероприятия
+            const eventData = `${event.id}_${event.name}_${event.date}_${event.description}_${event.link || ''}`;
+            // Простой хеш для сравнения (можно использовать более сложный, но для сравнения строк достаточно)
+            return eventData;
+        }
+        
         // Ключ для хранения регистраций в localStorage
         const getStorageKey = () => {
             const userId = tg.initDataUnsafe?.user?.id || 'default_user';
             return `cartel_registrations_${userId}`;
         };
 
-        // Сохранение регистраций в localStorage
-        function saveRegistrations(registeredEventIds) {
+        // Сохранение регистраций в localStorage (храним хеши мероприятий)
+        function saveRegistrations(registeredHashes) {
             const key = getStorageKey();
-            localStorage.setItem(key, JSON.stringify(registeredEventIds));
+            localStorage.setItem(key, JSON.stringify(registeredHashes));
         }
 
         // Загрузка регистраций из localStorage
@@ -266,29 +274,47 @@
             const saved = localStorage.getItem(key);
             return saved ? JSON.parse(saved) : [];
         }
-
+        
+        // Проверка, записан ли пользователь на конкретное мероприятие
+        function isUserRegisteredForEvent(event) {
+            const registeredHashes = loadRegistrations();
+            const currentHash = getEventHash(event);
+            return registeredHashes.includes(currentHash);
+        }
+        
+        // Сохранение регистрации для мероприятия
+        function saveRegistrationForEvent(event) {
+            const registeredHashes = loadRegistrations();
+            const currentHash = getEventHash(event);
+            
+            if (!registeredHashes.includes(currentHash)) {
+                registeredHashes.push(currentHash);
+                saveRegistrations(registeredHashes);
+            }
+        }
+        
         // Очистка устаревших регистраций (которых нет в актуальном списке мероприятий)
         function cleanStaleRegistrations() {
-            const registeredIds = loadRegistrations();
-            const existingEventIds = allEvents.map(event => event.id);
+            const registeredHashes = loadRegistrations();
+            const currentEventHashes = allEvents.map(event => getEventHash(event));
             
-            // Оставляем только те ID, которые есть в актуальном списке мероприятий
-            const validRegistrations = registeredIds.filter(id => existingEventIds.includes(id));
+            // Оставляем только те хеши, которые есть в актуальном списке мероприятий
+            const validRegistrations = registeredHashes.filter(hash => currentEventHashes.includes(hash));
             
             // Если были удалены какие-то регистрации, сохраняем обновленный список
-            if (validRegistrations.length !== registeredIds.length) {
+            if (validRegistrations.length !== registeredHashes.length) {
                 saveRegistrations(validRegistrations);
-                console.log('Удалены устаревшие регистрации:', registeredIds.filter(id => !existingEventIds.includes(id)));
+                console.log('Удалены устаревшие регистрации');
             }
             
             return validRegistrations;
         }
 
-        // Обновление статуса регистрации в allEvents на основе localStorage (с очисткой устаревших)
+        // Обновление статуса регистрации в allEvents на основе хешей
         function updateRegistrationStatusFromStorage() {
-            const validRegistrations = cleanStaleRegistrations();
+            cleanStaleRegistrations();
             allEvents.forEach(event => {
-                event.is_registered = validRegistrations.includes(event.id);
+                event.is_registered = isUserRegisteredForEvent(event);
             });
         }
 
@@ -304,7 +330,7 @@
                 const data = await res.json();
                 allEvents = data.events;
                 
-                // Обновляем статус регистрации (автоматически очищает устаревшие)
+                // Обновляем статус регистрации на основе хешей
                 updateRegistrationStatusFromStorage();
                 
                 container.innerHTML = '';
@@ -351,7 +377,8 @@
             const content = document.getElementById('detail-content');
             document.getElementById('event-detail-view').style.display = 'block';
             
-            const isRegistered = ev.is_registered;
+            // Проверяем регистрацию по хешу мероприятия
+            const isRegistered = isUserRegisteredForEvent(ev);
             
             let buttonHtml = '';
             let waitingHtml = '';
@@ -440,6 +467,7 @@
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             const user_id = tg.initDataUnsafe?.user?.id || 0;
+            const event = allEvents.find(e => e.id === currentActiveEventId);
 
             if(!name || !phone) { 
                 tg.showAlert('Заполните все поля'); 
@@ -454,11 +482,9 @@
                 });
                 const result = await res.json();
                 if(result.success) {
-                    // Сохраняем регистрацию в localStorage
-                    const registeredIds = loadRegistrations();
-                    if (!registeredIds.includes(currentActiveEventId)) {
-                        registeredIds.push(currentActiveEventId);
-                        saveRegistrations(registeredIds);
+                    // Сохраняем регистрацию по хешу мероприятия
+                    if (event) {
+                        saveRegistrationForEvent(event);
                     }
                     
                     // Обновляем статус в allEvents
@@ -479,33 +505,37 @@
         }
 
         async function syncRegistrationsWithServer() {
-            const registeredIds = loadRegistrations();
-            if (registeredIds.length === 0) return;
+            const registeredHashes = loadRegistrations();
+            if (registeredHashes.length === 0) return;
             
             const userId = tg.initDataUnsafe?.user?.id || 0;
             
-            // Сначала получаем актуальный список мероприятий с сервера
+            // Получаем актуальный список мероприятий с сервера
             try {
                 const res = await fetch(`${API_URL}/api/events?user_id=${userId}`);
                 const data = await res.json();
-                const existingEventIds = data.events.map(event => event.id);
+                const currentEvents = data.events;
+                const currentEventHashes = currentEvents.map(event => getEventHash(event));
                 
-                // Очищаем регистрации, которых нет на сервере
-                const validRegistrations = registeredIds.filter(id => existingEventIds.includes(id));
-                if (validRegistrations.length !== registeredIds.length) {
+                // Очищаем регистрации, которых нет на сервере или данные изменились
+                const validRegistrations = registeredHashes.filter(hash => currentEventHashes.includes(hash));
+                if (validRegistrations.length !== registeredHashes.length) {
                     saveRegistrations(validRegistrations);
                 }
                 
-                // Отправляем валидные регистрации на сервер для синхронизации
-                for (const eventId of validRegistrations) {
-                    try {
-                        await fetch(`${API_URL}/api/sync-registration`, {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify({ user_id: userId, event_id: eventId })
-                        });
-                    } catch (e) {
-                        console.error('Sync error:', e);
+                // Для каждого валидного мероприятия находим его ID и отправляем на сервер для синхронизации
+                for (const hash of validRegistrations) {
+                    const matchedEvent = currentEvents.find(event => getEventHash(event) === hash);
+                    if (matchedEvent) {
+                        try {
+                            await fetch(`${API_URL}/api/sync-registration`, {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({ user_id: userId, event_id: matchedEvent.id })
+                            });
+                        } catch (e) {
+                            console.error('Sync error:', e);
+                        }
                     }
                 }
             } catch (e) {
