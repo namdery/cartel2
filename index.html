@@ -13,6 +13,7 @@
             --accent-blue: #4351ff;
             --frame-blue: #d1dbff;
             --accent-orange: #ff6d2d;
+            --success-green: #10b981;
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -26,7 +27,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Навигация */
         header {
             position: fixed; top: 0; left: 0; right: 0;
             height: 70px; background: rgba(244, 247, 255, 0.9);
@@ -35,7 +35,6 @@
             border-bottom: 1px solid var(--frame-blue);
         }
 
-        /* Картинка чуть меньше (была 38px) */
         .logo-img { height: 33px; cursor: pointer; transition: 0.2s; }
         .logo-img:active { transform: scale(0.95); }
 
@@ -46,9 +45,7 @@
             cursor: pointer; padding: 10px 16px; border-radius: 12px;
             transition: 0.2s;
         }
-        .nav-btn:active { background: var(--frame-blue); }
 
-        /* Выпадающий список статей */
         .articles-dropdown {
             position: absolute; top: 50px; right: 0;
             background: white; border-radius: 18px;
@@ -63,11 +60,9 @@
             color: var(--text-main); font-size: 14px; font-weight: 600;
             border-bottom: 1px solid #f0f3ff; 
         }
-        .article-link:last-child { border: none; }
 
         .container { max-width: 600px; margin: 0 auto; padding: 100px 20px 40px; }
 
-        /* Текстовые блоки */
         .reveal { opacity: 0; transform: translateY(25px); transition: var(--transition); margin-bottom: 45px; }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
@@ -77,22 +72,22 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* КАРТОЧКИ МЕРОПРИЯТИЙ */
+        /* КАРТОЧКИ БЕЗ КНОПОК И ФОТО */
         .event-card {
             background: #ffffff; border: 2px solid var(--frame-blue);
-            border-radius: 24px; margin-bottom: 25px; overflow: hidden;
+            border-radius: 24px; margin-bottom: 20px;
             box-shadow: 0 8px 20px rgba(67, 81, 255, 0.05);
-            transition: 0.3s;
+            cursor: pointer; transition: 0.2s;
+            padding: 24px;
         }
-        .event-img { width: 100%; height: 210px; object-fit: cover; display: block; background: #eef2ff; }
-        .event-body { padding: 24px; }
+        .event-card:active { transform: scale(0.98); background: #f8faff; }
+
         .event-date-box { 
             display: inline-flex; align-items: center; gap: 6px;
             color: var(--accent-blue); font-weight: 800; font-size: 13px; 
             text-transform: uppercase; margin-bottom: 10px;
         }
 
-        /* Кнопки */
         .btn-main {
             width: 100%; padding: 18px; background: var(--accent-orange);
             color: white; border: none; border-radius: 16px;
@@ -100,13 +95,34 @@
             box-shadow: 0 6px 15px rgba(255, 109, 45, 0.2);
             transition: 0.2s;
         }
-        .btn-main:active { transform: scale(0.98); opacity: 0.9; }
-
-        /* Стиль если уже записан */
+        
+        /* Зеленая кнопка */
         .btn-main.registered {
-            background: #cbd5e1;
-            color: #64748b;
-            box-shadow: none;
+            background: var(--success-green);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .info-text-reg {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .event-link-block {
+            margin: 20px 0 30px;
+            padding: 15px;
+            background: #eff6ff;
+            border-radius: 12px;
+            border: 1px dashed var(--accent-blue);
+        }
+        .event-link-block a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 700;
+            word-break: break-all;
         }
 
         .btn-back {
@@ -116,7 +132,6 @@
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
 
-        /* Соцсети */
         .social-row { display: flex; gap: 14px; margin-top: 25px; }
         .draw-icon {
             width: 52px; height: 52px; border-radius: 16px;
@@ -127,7 +142,6 @@
         .draw-tg { background: #24a1de; }
         .draw-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); }
 
-        /* Модалка */
         .modal { display: none; position: fixed; inset: 0; background: rgba(26, 30, 46, 0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 100%; max-width: 350px; padding: 30px; border-radius: 28px; border: 2px solid var(--frame-blue); }
         .modal input { width: 100%; padding: 16px; margin: 10px 0; border: 1px solid var(--frame-blue); border-radius: 14px; font-size: 16px; outline: none; background: #f8faff; }
@@ -155,24 +169,15 @@
                 Cartel — международный клуб трейдеров, инвесторов и предпринимателей, <span class="gradient-text">стремящихся к финансовому росту и успеху!</span>
             </div>
             <div class="reveal" style="font-size: 17px; color: #475569; line-height: 1.6;">
-                Мы объединяем более 100 000 участников со всего мира — от новичков до профессионалов — для того, чтобы создавать успешные стратегии, обмениваться опытом и развиваться вместе.
-            </div>
-            <div class="reveal" style="font-weight: 800; color: #1e293b; margin-top: -15px;">
-                Наш клуб — это не просто площадка для общения, это мощный инструмент для вашего роста и стабильных доходов.
+                Мы объединяем более 100 000 участников со всего мира.
             </div>
 
             <div class="reveal" style="border-top: 2px solid var(--frame-blue); padding-top: 35px;">
-                <p style="font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 15px;">Связаться с менеджером:</p>
-                <a href="https://t.me/manager_cartelmarket" style="background:#0015ff; color:white; border-radius:20px; padding:18px 25px; display:flex; justify-content:space-between; text-decoration:none; font-weight:800; box-shadow: 0 10px 20px rgba(0,21,255,0.2);">
-                    Telegram 
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                </a>
-                
-                <p style="font-size: 14px; font-weight: 600; color: #64748b; margin-top: 40px; margin-bottom: 15px;">Наши соцсети:</p>
+                <p style="font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 15px;">Наши соцсети:</p>
                 <div class="social-row">
-                    <a href="https://YouTube" class="draw-icon draw-yt"><svg width="28" height="28" fill="white" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg></a>
-                    <a href="https://t.me/cartel_info" class="draw-icon draw-tg"><svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg></a>
-                    <a href="https://www.instagram.com/cartel_fx/" class="draw-icon draw-ig"><svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2zm5.2-9.3c.6 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2-1.2-.5-1.2-1.2.5-1.2 1.2-1.2z"/></svg></a>
+                    <a href="#" class="draw-icon draw-yt"><svg width="28" height="28" fill="white" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg></a>
+                    <a href="#" class="draw-icon draw-tg"><svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg></a>
+                    <a href="#" class="draw-icon draw-ig"><svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2zm5.2-9.3c.6 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2-1.2-.5-1.2-1.2.5-1.2 1.2-1.2z"/></svg></a>
                 </div>
             </div>
         </div>
@@ -189,7 +194,6 @@
         </div>
     </div>
 
-    <!-- МОДАЛКА -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 10px; font-weight: 900;">Регистрация</h3>
@@ -220,12 +224,6 @@
         function goHome() {
             hideAll();
             document.getElementById('home-view').style.display = 'block';
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        // Функция для показа алерта, если уже записан
-        function showAlreadyRegisteredAlert(date) {
-            tg.showAlert(`Вы уже записаны, ждем вас ${date} в 12:00 по адресу: г. Москва, ул. Трейдеров 1`);
         }
 
         async function showEventsList() {
@@ -234,48 +232,26 @@
             const container = document.getElementById('events-container');
             
             try {
-                // Передаем user_id чтобы сервер знал, кто запрашивает список и пометил регистрации
                 const userId = tg.initDataUnsafe?.user?.id || 0;
                 const res = await fetch(`${API_URL}/api/events?user_id=${userId}`);
                 const data = await res.json();
                 allEvents = data.events;
                 container.innerHTML = '';
 
-                if (allEvents.length === 0) {
-                    container.innerHTML = '<div class="event-card" style="padding:40px; text-align:center; color:#94a3b8; font-weight:600">Мероприятий пока нет.</div>';
-                    return;
-                }
-
                 allEvents.forEach(ev => {
                     const card = document.createElement('div');
                     card.className = 'event-card';
+                    card.onclick = () => showDetail(ev.id);
                     
-                    // Фотография из API
-                    const photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img" onclick="showDetail(${ev.id})">` : '';
-                    
-                    // Проверка регистрации
-                    let buttonHtml = '';
-                    if(ev.is_registered) {
-                        buttonHtml = `<button class="btn-main registered" onclick="showAlreadyRegisteredAlert('${ev.date}')">Вы уже записаны</button>`;
-                    } else {
-                        buttonHtml = `<button class="btn-main" onclick="triggerReg(${ev.id})">Записаться</button>`;
-                    }
-
                     card.innerHTML = `
-                        ${photoHtml}
-                        <div class="event-body">
-                            <div class="event-date-box">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                ${ev.date}
-                            </div>
-                            <h3 style="font-weight:900; font-size:20px; margin-bottom:15px; cursor:pointer" onclick="showDetail(${ev.id})">${ev.name}</h3>
-                            ${buttonHtml}
-                        </div>
+                        <div class="event-date-box">${ev.date}</div>
+                        <h3 style="font-weight:900; font-size:20px;">${ev.name}</h3>
+                        <p style="margin-top:8px; color:#64748b; font-size:14px;">Нажми, чтобы узнать подробности и записаться →</p>
                     `;
                     container.appendChild(card);
                 });
             } catch (e) {
-                container.innerHTML = '<div style="color:red; text-align:center">Ошибка связи.</div>';
+                container.innerHTML = 'Ошибка связи.';
             }
         }
 
@@ -286,34 +262,32 @@
             const content = document.getElementById('detail-content');
             document.getElementById('event-detail-view').style.display = 'block';
             
-            const photoHtml = ev.photo ? `<img src="${API_URL}/${ev.photo}" class="event-img" style="border-radius:24px; margin-bottom:20px">` : '';
-
-            // Кнопка для детального вида
-            let mainBtnHtml = '';
-            if(ev.is_registered) {
-                mainBtnHtml = `<button class="btn-main registered" onclick="showAlreadyRegisteredAlert('${ev.date}')">Вы уже записаны</button>`;
+            let actionBtn = '';
+            let infoText = '';
+            
+            if (ev.is_registered) {
+                actionBtn = `<button class="btn-main registered">Вы уже записаны</button>`;
+                infoText = `<div class="info-text-reg">Ждем вас ${ev.date} в 12:00 по адресу: г. Москва, ул. Трейдеров 1</div>`;
             } else {
-                mainBtnHtml = `<button class="btn-main" onclick="openModal()">Записаться на встречу</button>`;
+                actionBtn = `<button class="btn-main" onclick="openModal()">Записаться на встречу</button>`;
             }
 
             content.innerHTML = `
-                ${photoHtml}
                 <div class="event-date-box">${ev.date}</div>
                 <h2 style="font-weight:900; font-size:28px; margin-bottom:15px">${ev.name}</h2>
-                <div style="line-height:1.7; color:#475569; font-size:16px; margin-bottom:35px">${ev.description}</div>
+                <div style="line-height:1.7; color:#475569; font-size:16px;">${ev.description}</div>
                 
-                ${mainBtnHtml}
-                <button class="btn-back" onclick="showEventsList()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    Назад к списку
-                </button>
+                <div class="event-link-block">
+                    <span style="display:block; font-size:12px; color:#64748b; margin-bottom:4px">Ссылка на мероприятие:</span>
+                    <a href="${ev.link}" target="_blank">${ev.link}</a>
+                </div>
+
+                ${actionBtn}
+                ${infoText}
+
+                <button class="btn-back" style="margin-top:30px" onclick="showEventsList()">Назад к списку</button>
             `;
             window.scrollTo(0,0);
-        }
-
-        function triggerReg(id) {
-            currentActiveEventId = id;
-            openModal();
         }
 
         function toggleArticles() {
@@ -340,7 +314,7 @@
                 if(result.success) {
                     tg.showAlert(result.message);
                     closeModal();
-                    showEventsList(); // Обновляем список, чтобы кнопка изменилась
+                    showEventsList(); // Обновляем данные
                 } else {
                     tg.showAlert(result.error);
                 }
