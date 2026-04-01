@@ -13,7 +13,7 @@
             --accent-blue: #4351ff;
             --frame-blue: #d1dbff;
             --accent-orange: #ff6d2d;
-            --success-green: #10b981;
+            --success-green: #10b981; /* Зеленый цвет для кнопки */
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -72,13 +72,11 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* КАРТОЧКИ БЕЗ КНОПОК И ФОТО */
         .event-card {
             background: #ffffff; border: 2px solid var(--frame-blue);
             border-radius: 24px; margin-bottom: 20px;
             box-shadow: 0 8px 20px rgba(67, 81, 255, 0.05);
-            cursor: pointer; transition: 0.2s;
-            padding: 24px;
+            cursor: pointer; transition: 0.2s; padding: 24px;
         }
         .event-card:active { transform: scale(0.98); background: #f8faff; }
 
@@ -96,33 +94,30 @@
             transition: 0.2s;
         }
         
-        /* Зеленая кнопка */
+        /* Стиль для зеленой кнопки */
         .btn-main.registered {
             background: var(--success-green);
             box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2);
         }
 
+        /* Текст под кнопкой */
         .info-text-reg {
             margin-top: 15px;
             text-align: center;
             font-size: 15px;
-            font-weight: 600;
-            color: #475569;
+            font-weight: 700;
+            color: #1e293b;
             line-height: 1.4;
         }
 
         .event-link-block {
-            margin: 20px 0 30px;
-            padding: 15px;
-            background: #eff6ff;
-            border-radius: 12px;
+            margin: 20px 0 30px; padding: 15px;
+            background: #eff6ff; border-radius: 12px;
             border: 1px dashed var(--accent-blue);
         }
         .event-link-block a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-weight: 700;
-            word-break: break-all;
+            color: var(--accent-blue); text-decoration: none;
+            font-weight: 700; word-break: break-all;
         }
 
         .btn-back {
@@ -169,26 +164,20 @@
                 Cartel — международный клуб трейдеров, инвесторов и предпринимателей, <span class="gradient-text">стремящихся к финансовому росту и успеху!</span>
             </div>
             <div class="reveal" style="font-size: 17px; color: #475569; line-height: 1.6;">
-                Мы объединяем более 100 000 участников со всего мира.
+                Мы объединяем более 100 000 участников со всего мира — от новичков до профессионалов.
             </div>
-
-            <div class="reveal" style="border-top: 2px solid var(--frame-blue); padding-top: 35px;">
-                <p style="font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 15px;">Наши соцсети:</p>
-                <div class="social-row">
-                    <a href="#" class="draw-icon draw-yt"><svg width="28" height="28" fill="white" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg></a>
-                    <a href="#" class="draw-icon draw-tg"><svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg></a>
-                    <a href="#" class="draw-icon draw-ig"><svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2zm5.2-9.3c.6 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2-1.2-.5-1.2-1.2.5-1.2 1.2-1.2z"/></svg></a>
-                </div>
+            <div class="social-row reveal">
+                <a href="#" class="draw-icon draw-yt"><svg width="28" height="28" fill="white" viewBox="0 0 24 24"><path d="M23.5 6.2c-.3-1.1-1.1-1.9-2.2-2.2C19.3 3.5 12 3.5 12 3.5s-7.3 0-9.3.5c-1.1.3-1.9 1.1-2.2 2.2C0 8.2 0 12.3 0 12.3s0 4.1.5 6.1c.3 1.1 1.1 1.9 2.2 2.2 2 1 9.3 1 9.3 1s7.3 0 9.3-1c1.1-.3 1.9-1.1 2.2-2.2.5-2 .5-6.1.5-6.1s0-4.1-.5-6.1zM9.5 15.5V9l6.5 3.2-6.5 3.3z"/></svg></a>
+                <a href="#" class="draw-icon draw-tg"><svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.6 7.1l-1.6 7.4c-.1.5-.4.6-.8.4l-2.4-1.8-1.2 1.1c-.1.1-.2.2-.4.2l.2-2.5 4.5-4.1c.2-.2 0-.3-.3-.1L6.2 12.6l-2.4-.8c-.5-.2-.5-.5.1-.7l9.4-3.6c.4-.2.8.1.7.7z"/></svg></a>
+                <a href="#" class="draw-icon draw-ig"><svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.1.1 1.8.2 2.4.5.6.2 1.1.6 1.6 1.1.5.5.9 1 1.1 1.6.2.6.4 1.3.5 2.4.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.1-.2 1.8-.5 2.4-.2.6-.6 1.1-1.1 1.6-.5.5-1 .9-1.6 1.1-.6.2-1.3.4-2.4.5-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.1-.1-1.8-.2-2.4-.5-.6-.2-1.1-.6-1.6-1.1-.5-.5-.9-1-1.1-1.6-.2-.6-.4-1.3-.5-2.4-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-1.1.2-1.8.5-2.4.2-.6.6-1.1 1.1-1.6.5-.5 1-.9 1.6-1.1.6-.2 1.3-.4 2.4-.5 1.2-.1 1.6-.1 4.8-.1zM12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.2c-1.8 0-3.2-1.4-3.2-3.2s1.4-3.2 3.2-3.2 3.2 1.4 3.2 3.2-1.4 3.2-3.2 3.2zm5.2-9.3c.6 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2-1.2-.5-1.2-1.2.5-1.2 1.2-1.2z"/></svg></a>
             </div>
         </div>
 
-        <!-- СПИСОК МЕРОПРИЯТИЙ -->
         <div id="events-list-view" style="display:none">
             <h2 style="margin-bottom: 30px; font-weight: 900; font-size: 28px;">Мероприятия</h2>
             <div id="events-container">Загрузка...</div>
         </div>
 
-        <!-- ДЕТАЛИ МЕРОПРИЯТИЯ -->
         <div id="event-detail-view" style="display:none">
             <div id="detail-content"></div>
         </div>
@@ -246,7 +235,7 @@
                     card.innerHTML = `
                         <div class="event-date-box">${ev.date}</div>
                         <h3 style="font-weight:900; font-size:20px;">${ev.name}</h3>
-                        <p style="margin-top:8px; color:#64748b; font-size:14px;">Нажми, чтобы узнать подробности и записаться →</p>
+                        <p style="margin-top:8px; color:#64748b; font-size:13px;">Нажми, чтобы записаться →</p>
                     `;
                     container.appendChild(card);
                 });
@@ -265,6 +254,7 @@
             let actionBtn = '';
             let infoText = '';
             
+            // ЛОГИКА КНОПКИ И ПОДПИСИ
             if (ev.is_registered) {
                 actionBtn = `<button class="btn-main registered">Вы уже записаны</button>`;
                 infoText = `<div class="info-text-reg">Ждем вас ${ev.date} в 12:00 по адресу: г. Москва, ул. Трейдеров 1</div>`;
@@ -278,7 +268,7 @@
                 <div style="line-height:1.7; color:#475569; font-size:16px;">${ev.description}</div>
                 
                 <div class="event-link-block">
-                    <span style="display:block; font-size:12px; color:#64748b; margin-bottom:4px">Ссылка на мероприятие:</span>
+                    <span style="display:block; font-size:12px; color:#64748b; margin-bottom:4px">Ссылка на встречу:</span>
                     <a href="${ev.link}" target="_blank">${ev.link}</a>
                 </div>
 
@@ -314,7 +304,7 @@
                 if(result.success) {
                     tg.showAlert(result.message);
                     closeModal();
-                    showEventsList(); // Обновляем данные
+                    showEventsList(); 
                 } else {
                     tg.showAlert(result.error);
                 }
