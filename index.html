@@ -247,18 +247,32 @@
         const API_URL = "http://localhost:8080"; 
         let allEvents = [];
         let currentActiveEventId = null;
+        
+        // Ключ для хранения регистраций в localStorage
+        const getStorageKey = () => {
+            const userId = tg.initDataUnsafe?.user?.id || 'default_user';
+            return `cartel_registrations_${userId}`;
+        };
 
-        function hideAll() {
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('events-list-view').style.display = 'none';
-            document.getElementById('event-detail-view').style.display = 'none';
-            document.getElementById('articles-list').classList.remove('active');
+        // Сохранение регистраций в localStorage
+        function saveRegistrations(registeredEventIds) {
+            const key = getStorageKey();
+            localStorage.setItem(key, JSON.stringify(registeredEventIds));
         }
 
-        function goHome() {
-            hideAll();
-            document.getElementById('home-view').style.display = 'block';
-            window.scrollTo({top: 0, behavior: 'smooth'});
+        // Загрузка регистраций из localStorage
+        function loadRegistrations() {
+            const key = getStorageKey();
+            const saved = localStorage.getItem(key);
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        // Обновление статуса регистрации в allEvents на основе localStorage
+        function updateRegistrationStatusFromStorage() {
+            const registeredIds = loadRegistrations();
+            allEvents.forEach(event => {
+                event.is_registered = registeredIds.includes(event.id);
+            });
         }
 
         async function showEventsList() {
@@ -272,6 +286,10 @@
                 const res = await fetch(`${API_URL}/api/events?user_id=${userId}`);
                 const data = await res.json();
                 allEvents = data.events;
+                
+                // Восстанавливаем статус регистрации из localStorage
+                updateRegistrationStatusFromStorage();
+                
                 container.innerHTML = '';
 
                 if (allEvents.length === 0) {
@@ -378,6 +396,19 @@
             window.scrollTo(0,0);
         }
 
+        function hideAll() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('events-list-view').style.display = 'none';
+            document.getElementById('event-detail-view').style.display = 'none';
+            document.getElementById('articles-list').classList.remove('active');
+        }
+
+        function goHome() {
+            hideAll();
+            document.getElementById('home-view').style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
         function toggleArticles() {
             document.getElementById('articles-list').classList.toggle('active');
         }
@@ -411,12 +442,21 @@
                 });
                 const result = await res.json();
                 if(result.success) {
-                    tg.showAlert(result.message);
-                    closeModal();
+                    // Сохраняем регистрацию в localStorage
+                    const registeredIds = loadRegistrations();
+                    if (!registeredIds.includes(currentActiveEventId)) {
+                        registeredIds.push(currentActiveEventId);
+                        saveRegistrations(registeredIds);
+                    }
+                    
+                    // Обновляем статус в allEvents
                     const eventIndex = allEvents.findIndex(e => e.id === currentActiveEventId);
                     if (eventIndex !== -1) {
                         allEvents[eventIndex].is_registered = true;
                     }
+                    
+                    tg.showAlert(result.message);
+                    closeModal();
                     showDetail(currentActiveEventId);
                 } else {
                     tg.showAlert(result.error || 'Ошибка при регистрации');
@@ -425,6 +465,29 @@
                 tg.showAlert('Ошибка сервера'); 
             }
         }
+
+        // При загрузке страницы проверяем localStorage и синхронизируем с сервером
+        async function syncRegistrationsWithServer() {
+            const registeredIds = loadRegistrations();
+            if (registeredIds.length === 0) return;
+            
+            const userId = tg.initDataUnsafe?.user?.id || 0;
+            // Отправляем синхронизацию на сервер
+            for (const eventId of registeredIds) {
+                try {
+                    await fetch(`${API_URL}/api/sync-registration`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ user_id: userId, event_id: eventId })
+                    });
+                } catch (e) {
+                    console.error('Sync error:', e);
+                }
+            }
+        }
+
+        // Запускаем синхронизацию при загрузке
+        syncRegistrationsWithServer();
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
