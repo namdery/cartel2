@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cartel Club</title>
-    <!-- Подключение Telegram Web App API -->
+    <title>Cartel Club</title> 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Подключение шрифта Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Основные цвета и градиенты */
             --bg-color: #f4f7ff;
             --text-main: #1a1e2e;
             --accent-blue: #0015ff;
@@ -20,9 +17,7 @@
             --success-green: #10b981;
             --error-red: #ef4444;
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            /* Градиент для главного заголовка */
             --photo-gradient: linear-gradient(90deg, #0015ff 0%, #7e22ce 40%, #ea580c 70%, #ff6d2d 100%);
-            /* Градиент для верхней плашки */
             --bar-gradient: linear-gradient(90deg, #4c1d95, #7e22ce, #ea580c, #f97316, #4c1d95);
         }
 
@@ -36,7 +31,6 @@
             line-height: 1.6;
         }
 
-        /* Стиль анимированной плашки чата в самом верху */
         .top-promo-bar {
             position: fixed; top: 0; left: 0; right: 0;
             height: 48px; background: var(--bar-gradient);
@@ -47,7 +41,7 @@
             z-index: 1001; cursor: pointer; padding: 0 15px;
         }
         
-        /* Кнопка внутри плашки */
+
         .bar-btn {
             background: white; color: #0015ff;
             padding: 6px 14px; border-radius: 20px;
@@ -55,10 +49,8 @@
             white-space: nowrap; margin-left: 10px;
         }
 
-        /* Анимация перелива градиента */
         @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
 
-        /* Шапка приложения (Header) */
         header {
             position: fixed; top: 48px; left: 0; right: 0;
             height: 56px; background: rgba(244, 247, 255, 0.9);
@@ -69,7 +61,6 @@
 
         .logo-img { height: 22px; cursor: pointer; }
 
-        /* Навигационное меню */
         .nav-menu { display: flex; gap: 8px; margin-left: auto; position: relative; }
         .nav-btn {
             background: #ffffff; border: 1px solid var(--frame-blue); 
@@ -78,11 +69,9 @@
             display: flex; align-items: center; gap: 8px;
         }
         
-        /* Стрелочка у кнопки Статьи */
         .nav-btn.active .arrow-svg { transform: rotate(180deg); }
         .arrow-svg { width: 10px; transition: 0.3s; fill: currentColor; }
 
-        /* Выпадающий список статей */
         .articles-dropdown {
             position: absolute; top: 50px; right: 0;
             background: white; border-radius: 18px;
@@ -100,24 +89,20 @@
 
         .container { max-width: 600px; margin: 0 auto; padding: 130px 20px 40px; }
 
-        /* Анимация появления контента */
         .view-section { animation: viewFadeIn 0.5s ease-out; }
         @keyframes viewFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Главный градиентный заголовок */
         .grad-h-main {
             font-weight: 900; font-size: 28px; line-height: 1.1; 
             margin-bottom: 20px; display: block;
             background: var(--photo-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         
-        /* Подзаголовки разделов (синие) */
         .section-header {
             font-weight: 900; font-size: 24px; color: var(--accent-blue);
             margin-bottom: 15px; margin-top: 35px;
         }
 
-        /* Оформление списка экспертов */
         .experts-column { display: flex; flex-direction: column; align-items: center; gap: 40px; margin-top: 50px; }
         .expert-item { text-align: center; cursor: pointer; width: 100%; }
         .expert-circle {
@@ -128,7 +113,6 @@
         .expert-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: white; }
         .expert-label { margin-top: 12px; font-weight: 900; font-size: 22px; color: #1a1e2e; }
 
-        /* Текстовые блоки и списки */
         .p-main { font-size: 16px; color: #475569; margin-bottom: 15px; white-space: pre-line; }
         .p-main b, .p-main strong { color: #1a1e2e; font-weight: 800; }
         
@@ -138,7 +122,6 @@
             flex-shrink: 0; margin-top: 2px; border: 4px solid #d1dbff;
         }
 
-        /* Кнопки */
         .btn-main {
             width: 100%; padding: 18px; background: var(--accent-orange);
             color: white; border: none; border-radius: 16px;
@@ -153,14 +136,12 @@
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
 
-        /* Блоки ссылок и уведомлений в мероприятиях */
         .event-link-box { margin: 15px 0; padding: 14px; background: #f8faff; border-radius: 14px; border: 1px dashed var(--frame-blue); word-break: break-all; }
         .event-link-box a { color: var(--accent-blue); text-decoration: none; font-weight: 700; font-size: 14px; }
         .waiting-msg { background: #f0fdf4; border: 1px solid #bcf0da; padding: 18px; border-radius: 18px; margin: 20px 0; color: #166534; font-size: 15px; font-weight: 700; text-align: center; }
 
         .statia-img { width: 100%; border-radius: 24px; margin-bottom: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
 
-        /* Модальные окна */
         .modal { 
             display: none; position: fixed; inset: 0; 
             background: rgba(26, 30, 46, 0.85); z-index: 2000; 
@@ -178,7 +159,7 @@
             font-size: 16px; outline: none; background: #f8faff; 
             transition: 0.3s;
         }
-        /* Стиль для ошибки валидации почты */
+
         .input-error {
             background: #fff1f2 !important;
             border-color: var(--error-red) !important;
@@ -187,13 +168,13 @@
 </head>
 <body>
 
-    <!-- Анимированная плашка (Chat Promo) -->
+
     <div class="top-promo-bar" onclick="openChatModal()">
         <span>Пока ты читаешь это — в чате уже обсуждают прибыльные сделки!</span>
         <div class="bar-btn">Вступить в чат</div>
     </div>
 
-    <!-- Header -->
+
     <header>
         <img src="image1.png" class="logo-img" onclick="goHome()">
         <div class="nav-menu">
@@ -201,7 +182,6 @@
                 Статьи <svg class="arrow-svg" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
             </button>
             <button class="nav-btn" onclick="showEventsList()">Мероприятия</button>
-            <!-- Список ссылок в выпадающем меню -->
             <div id="articles-list" class="articles-dropdown">
                 <a href="javascript:void(0)" onclick="showArticle(1)" class="article-link">Как заработать на криптовалюте</a>
                 <a href="javascript:void(0)" onclick="showArticle(2)" class="article-link">Почему твой теханализ не работает</a>
@@ -213,16 +193,14 @@
     </header>
 
     <div class="container">
-        <!-- Главная страница -->
         <div id="home-view" class="view-section">
             <h1 class="grad-h-main">Cartel — международный клуб успеха!</h1>
             <p class="p-main" style="font-size: 18px;">Объединяем трейдеров и инвесторов со всего мира для совместного роста и финансового успеха.</p>
             <div class="experts-column" id="experts-container">
-                <p style="font-weight: 800; font-size: 18px; color: #1e293b;">Наши наставники:</p>
+                <p style="font-weight: 800; font-size: 18px; color: #1e293b;">Наставники клуба Cartel</p>
             </div>
         </div>
 
-        <!-- Профиль наставника (динамический) -->
         <div id="expert-detail-view" style="display:none" class="view-section">
             <div id="expert-header-box"></div>
             <h2 class="section-header">Краткое представление</h2>
@@ -232,30 +210,28 @@
             <button class="btn-back" onclick="goHome()">Назад к списку</button>
         </div>
 
-        <!-- Список мероприятий -->
         <div id="events-list-view" style="display:none" class="view-section">
             <h2 class="section-header">Мероприятия</h2>
             <div id="events-container">Загрузка...</div>
             <button class="btn-back" onclick="goHome()">Назад</button>
         </div>
 
-        <!-- Детали мероприятия -->
+
         <div id="event-detail-view" style="display:none" class="view-section">
             <div id="event-target-content"></div>
         </div>
 
-        <!-- Контент статьи -->
         <div id="article-view" style="display:none" class="view-section">
             <div id="article-final-target"></div>
             <button class="btn-back" onclick="goHome()">Назад</button>
         </div>
     </div>
 
-    <!-- Модалка сбора данных для Чата -->
+
     <div id="chat-modal" class="modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 10px; font-weight: 900;">Вступить в чат</h3>
-            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Заполните форму для получения ссылки</p>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Зарегистрируйтесь для входа</p>
             <input type="text" id="chat-name" placeholder="Ваше имя">
             <input type="tel" id="chat-phone" placeholder="Номер телефона">
             <input type="email" id="chat-email" placeholder="Ваш Email">
@@ -264,7 +240,6 @@
         </div>
     </div>
 
-    <!-- Модалка Спасибо за подписку на чат -->
     <div id="thanks-modal" class="modal">
         <div class="modal-content">
             <h2 class="grad-h-main" style="font-size: 26px;">Спасибо!</h2>
@@ -273,7 +248,6 @@
         </div>
     </div>
 
-    <!-- Модалка регистрации на Мероприятие -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 10px; font-weight: 900;">Регистрация</h3>
@@ -286,23 +260,22 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Расширение окна Mini App
+        tg.expand(); 
         const API_URL = "http://localhost:8080";
         let allEvents = [];
         let curEvId = null;
 
-        // Генерация уникального ключа для каждого мероприятия на основе всех его данных
+
         function getEvKey(ev) {
             return `${ev.id}_${ev.name}_${ev.date}_${ev.link||''}_${ev.description||''}`;
         }
 
-        // Получение списка регистраций пользователя из LocalStorage
+
         function getRegs() {
             const userId = tg.initDataUnsafe?.user?.id || 'def';
             return JSON.parse(localStorage.getItem(`c_regs_${userId}`) || '[]');
         }
 
-        // Сохранение регистрации локально
         function saveReg(ev) {
             const userId = tg.initDataUnsafe?.user?.id || 'def';
             const regs = getRegs();
@@ -313,11 +286,9 @@
             }
         }
 
-        // Управление модалкой чата
         function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
         function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
         
-        // Логика подтверждения данных для чата (с валидацией почты)
         function submitChatRegistration() {
             const name = document.getElementById('chat-name').value;
             const phone = document.getElementById('chat-phone').value;
@@ -326,7 +297,6 @@
 
             if(!name || !phone || !email) { tg.showAlert("Заполните все поля"); return; }
             
-            // Проверка на наличие @
             if(!email.includes('@')) {
                 emailInput.classList.add('input-error');
                 emailInput.value = "";
@@ -340,7 +310,6 @@
             document.getElementById('thanks-modal').style.display = 'flex';
         }
 
-        // Данные наставников (Biographies)
         const experts = [
             {
                 name: "Иван Крошный", img: "image12.png",
@@ -399,7 +368,6 @@
             }
         ];
 
-        // Отрисовка наставников в столбик
         function initExperts() {
             const container = document.getElementById('experts-container');
             experts.forEach((ex, idx) => {
@@ -411,7 +379,6 @@
             });
         }
 
-        // Переход в профиль наставника
         function showExpert(idx) {
             hideAll();
             const ex = experts[idx];
@@ -422,12 +389,11 @@
             window.scrollTo(0,0);
         }
 
-        // Загрузка списка мероприятий с сервера
         async function showEventsList() {
             hideAll();
             document.getElementById('events-list-view').style.display = 'block';
             const container = document.getElementById('events-container');
-            container.innerHTML = 'Загрузка...';
+            container.innerHTML = 'Ошибка';
             try {
                 const res = await fetch(`${API_URL}/api/events?user_id=${tg.initDataUnsafe?.user?.id || 0}`);
                 const data = await res.json();
@@ -435,27 +401,27 @@
                 const localRegs = getRegs();
                 container.innerHTML = '';
                 allEvents.forEach(ev => {
-                    const isRegistered = localRegs.includes(getEvKey(ev)); // Проверка уникального ключа
+                    const isRegistered = localRegs.includes(getEvKey(ev)); 
                     const card = document.createElement('div');
                     card.className = 'expert-item'; card.style.background='white'; card.style.padding='24px'; card.style.borderRadius='24px'; card.style.marginBottom='15px'; card.style.border='1px solid var(--frame-blue)';
                     card.onclick = () => showEventDetail(ev.id);
                     card.innerHTML = `<div style="color:var(--accent-blue); font-weight:800; font-size:13px;">${ev.date}</div><h3 style="font-weight:900; margin-top:5px;">${ev.name}</h3>${isRegistered ? '<div style="color:var(--success-green); font-weight:700; margin-top:10px;">✓ Вы записаны</div>' : ''}`;
                     container.appendChild(card);
                 });
-            } catch(e) { container.innerHTML = 'Мероприятия временно недоступны.'; }
+            } catch(e) { container.innerHTML = 'Ошибка'; }
         }
 
-        // Просмотр детальной информации о мероприятии
+
         function showEventDetail(id) {
             hideAll();
             const ev = allEvents.find(x => x.id === id);
             if(!ev) return;
             curEvId = id;
-            const isRegistered = getRegs().includes(getEvKey(ev)); // Проверка уникальности
+            const isRegistered = getRegs().includes(getEvKey(ev)); 
             document.getElementById('event-detail-view').style.display = 'block';
             
-            const linkBlock = ev.link ? `<div class="event-link-box"><a href="${ev.link}" target="_blank">Ссылка на встречу: ${ev.link}</a></div>` : '';
-            const waitMsg = isRegistered ? `<div class="waiting-msg">✓ Вы успешно записаны! Ждем вас ${ev.date}.</div>` : '';
+            const linkBlock = ev.link ? `<div class="event-link-box"><a href="${ev.link}" target="_blank">Ссылка: ${ev.link}</a></div>` : '';
+            const waitMsg = isRegistered ? `<div class="waiting-msg">Ждем вас ${ev.date}.</div>` по адресу: '';
             const btnHtml = isRegistered ? `<button class="btn-main registered">Вы уже записаны</button>` : `<button class="btn-main" onclick="openModal()">Записаться на мероприятие</button>`;
 
             document.getElementById('event-target-content').innerHTML = `
@@ -469,7 +435,6 @@
             `;
         }
 
-        // Отправка формы регистрации
         async function submitRegistration() {
             const n = document.getElementById('reg-name').value;
             const p = document.getElementById('reg-phone').value;
@@ -482,7 +447,6 @@
             } catch(e) { tg.showAlert('Ошибка сервера'); }
         }
 
-        // Показ статьи (полные тексты)
         function showArticle(id) {
             hideAll(); document.getElementById('article-view').style.display = 'block';
             const target = document.getElementById('article-final-target'); window.scrollTo(0,0);
@@ -637,14 +601,12 @@
             target.innerHTML = h;
         }
 
-        // Функции переключения экранов
         function toggleArticles() { document.getElementById('articles-list').classList.toggle('active'); document.getElementById('art-btn').classList.toggle('active'); }
         function hideAll() { ['home-view','expert-detail-view','events-list-view','event-detail-view','article-view'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; }); document.getElementById('articles-list').classList.remove('active'); document.getElementById('art-btn').classList.remove('active'); }
         function goHome() { hideAll(); document.getElementById('home-view').style.display = 'block'; window.scrollTo({top: 0, behavior: 'smooth'}); }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
 
-        // Запуск
         initExperts();
     </script>
 </body>
