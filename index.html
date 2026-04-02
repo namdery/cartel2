@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cartel Club</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f4f7ff;
             --text-main: #1a1e2e;
-            --accent-blue: #4351ff;
-            --frame-blue: #d1dbff;
+            --accent-blue: #0015ff;
             --accent-orange: #ff6d2d;
-            --success-green: #10b981;
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --frame-blue: #d1dbff;
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -23,8 +22,7 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            overflow-x: hidden;
-            scroll-behavior: smooth;
+            line-height: 1.5;
         }
 
         header {
@@ -35,112 +33,79 @@
             border-bottom: 1px solid var(--frame-blue);
         }
 
-        .logo-img { height: 33px; cursor: pointer; transition: 0.2s; }
+        .logo-img { height: 33px; cursor: pointer; }
 
         .nav-menu { display: flex; gap: 8px; margin-left: auto; position: relative; }
         .nav-btn {
             background: #ffffff; border: 1px solid var(--frame-blue); 
             font-weight: 700; font-size: 13px; color: var(--text-main); 
             cursor: pointer; padding: 10px 16px; border-radius: 12px;
-            display: flex; align-items: center; gap: 8px; transition: 0.2s;
+            display: flex; align-items: center; gap: 8px;
         }
-
-        .arrow-svg { 
-            width: 12px; height: 12px; transition: transform 0.3s; 
-            fill: #1a1e2e;
-        }
+        .arrow-svg { width: 12px; transition: 0.3s; fill: currentColor; }
         .nav-btn.active .arrow-svg { transform: rotate(180deg); }
 
         .articles-dropdown {
-            position: absolute; top: 50px; right: 0;
+            position: absolute; top: 55px; right: 0;
             background: white; border-radius: 18px;
-            box-shadow: 0 15px 35px rgba(67, 81, 255, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 21, 255, 0.1);
             width: 280px; opacity: 0; visibility: hidden;
             transform: translateY(-10px); transition: var(--transition);
-            border: 1px solid var(--frame-blue); z-index: 1001; overflow: hidden;
+            border: 1px solid var(--frame-blue); overflow: hidden;
         }
         .articles-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
         .article-link { 
             display: block; padding: 14px 20px; text-decoration: none; 
             color: var(--text-main); font-size: 14px; font-weight: 600;
-            border-bottom: 1px solid #f0f3ff; transition: 0.2s;
+            border-bottom: 1px solid #f0f3ff;
         }
-        .article-link:hover { background: #f8faff; color: var(--accent-blue); }
 
         .container { max-width: 600px; margin: 0 auto; padding: 100px 20px 40px; }
 
         /* Иконки экспертов в столбик */
-        .experts-column { display: flex; flex-direction: column; align-items: center; gap: 35px; margin-top: 50px; }
-        .expert-item { text-align: center; cursor: pointer; width: 100%; }
+        .experts-list { display: flex; flex-direction: column; align-items: center; gap: 40px; margin-top: 50px; }
+        .expert-card-main { text-align: center; cursor: pointer; width: 100%; }
         .expert-circle {
-            width: 125px; height: 125px; border-radius: 50%;
+            width: 160px; height: 160px; border-radius: 50%;
             background: linear-gradient(135deg, #4351ff 0%, #ff6d2d 100%);
-            padding: 4px; display: inline-flex; align-items: center; justify-content: center;
+            padding: 5px; display: inline-flex; margin-bottom: 15px;
         }
         .expert-circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: white; }
-        .expert-label { margin-top: 10px; font-weight: 700; font-size: 14px; color: #64748b; }
+        .expert-name-label { font-weight: 900; font-size: 20px; color: #1a1e2e; }
 
-        /* Градиентные заголовки как на фото */
-        .grad-h { font-weight: 900; font-size: 32px; line-height: 1.1; margin-bottom: 25px; display: block; }
-        .grad-h span:first-child { color: #0015ff; }
-        .grad-h span.orange { 
+        /* Стиль заголовков как на фото */
+        .grad-title { font-size: 36px; font-weight: 900; line-height: 1.1; margin-bottom: 25px; }
+        .grad-title span:first-child { color: #0015ff; }
+        .grad-title .orange-part { 
             background: linear-gradient(90deg, #ff6d2d, #ffb32d);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        /* Мероприятия */
-        .event-card {
-            background: #ffffff; border: 2px solid var(--frame-blue);
-            border-radius: 24px; margin-bottom: 25px; overflow: hidden;
-            box-shadow: 0 8px 20px rgba(67, 81, 255, 0.05); transition: 0.3s; cursor: pointer;
+        /* Список достижений с галками */
+        .achieve-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: flex-start; }
+        .check-circle {
+            width: 24px; height: 24px; background: #0015ff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 3px;
         }
-        .event-card:active { transform: scale(0.98); }
-        .event-body { padding: 24px; }
-        .event-date-box { 
-            display: inline-flex; align-items: center; gap: 6px;
-            color: var(--accent-blue); font-weight: 800; font-size: 13px; 
-            text-transform: uppercase; margin-bottom: 10px;
-        }
+        .check-circle svg { width: 14px; height: 14px; fill: white; }
 
-        /* Статьи и контент */
-        .article-body { animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .statia-img { width: 100%; border-radius: 24px; margin-bottom: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .p-text { font-size: 16px; line-height: 1.6; color: #475569; margin-bottom: 15px; white-space: pre-line; }
-        .p-text b, .p-text strong { color: #1a1e2e; font-weight: 800; }
-        .h-large { font-weight: 900; font-size: 28px; color: #1a1e2e; margin-bottom: 20px; line-height: 1.2; }
-        
-        .list-item { display: flex; gap: 12px; margin: 15px 0; align-items: flex-start; }
-        .blue-dot { 
-            width: 22px; height: 22px; background: #0015ff; border-radius: 50%; 
-            flex-shrink: 0; margin-top: 4px; border: 4px solid #d1dbff;
-        }
-
-        .btn-main {
-            width: 100%; padding: 18px; background: var(--accent-orange);
-            color: white; border: none; border-radius: 16px;
-            font-weight: 800; cursor: pointer; font-size: 16px;
-            box-shadow: 0 6px 15px rgba(255, 109, 45, 0.2); transition: 0.2s;
-        }
-        .btn-main:active { transform: scale(0.98); opacity: 0.9; }
-        .btn-main.registered { background: var(--success-green); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.2); cursor: default; }
+        .desc-text { font-size: 16px; color: #475569; line-height: 1.6; white-space: pre-line; margin-bottom: 20px; }
+        .desc-text b, .desc-text strong { color: #1a1e2e; font-weight: 800; }
 
         .btn-back {
-            width: 100%; padding: 14px; background: #ffffff;
-            color: #64748b; border: 1px solid var(--frame-blue); border-radius: 14px;
-            font-weight: 700; cursor: pointer; margin-top: 20px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 16px; background: white; border: 1px solid var(--frame-blue);
+            border-radius: 14px; font-weight: 700; color: #64748b; margin-top: 30px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
-
-        .hero-title { font-weight: 900; font-size: 30px; line-height: 1.15; letter-spacing: -1px; margin-bottom: 25px; }
-        .accent-gradient {
-            background: linear-gradient(90deg, #4351ff 0%, #a855f7 50%, #ff6d2d 100%);
+        
+        .hero-title { font-weight: 900; font-size: 30px; line-height: 1.15; margin-bottom: 20px; }
+        .accent-grad {
+            background: linear-gradient(90deg, #4351ff, #ff6d2d);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(26, 30, 46, 0.8); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 100%; max-width: 350px; padding: 30px; border-radius: 28px; border: 2px solid var(--frame-blue); }
-        .modal input { width: 100%; padding: 16px; margin: 10px 0; border: 1px solid var(--frame-blue); border-radius: 14px; font-size: 16px; outline: none; background: #f8faff; }
+        /* Для страницы мероприятия */
+        .event-box { background: white; border: 2px solid var(--frame-blue); border-radius: 24px; padding: 24px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -148,9 +113,8 @@
     <header>
         <img src="image1.png" class="logo-img" onclick="goHome()">
         <div class="nav-menu">
-            <button class="nav-btn" id="art-btn" onclick="toggleArticles()">
-                Статьи
-                <svg class="arrow-svg" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+            <button class="nav-btn" onclick="toggleArticles()" id="art-btn">
+                Статьи <svg class="arrow-svg" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
             </button>
             <button class="nav-btn" onclick="showEventsList()">Мероприятия</button>
             <div id="articles-list" class="articles-dropdown">
@@ -164,65 +128,34 @@
     </header>
 
     <div class="container">
-        <!-- ГЛАВНАЯ -->
+        <!-- ГЛАВНЫЙ ЭКРАН -->
         <div id="home-view">
             <div class="hero-title">
-                Cartel — международный клуб трейдеров, инвесторов и предпринимателей, <span class="accent-gradient">стремящихся к финансовому росту!</span>
+                Cartel — международный клуб трейдеров и инвесторов, <span class="accent-grad">стремящихся к успеху!</span>
             </div>
             
-            <p class="p-text">Мы объединяем более 100 000 участников со всего мира для создания стратегий и развития вместе.</p>
-
-            <div class="experts-column" id="experts-container">
-                <p style="font-weight: 800; font-size: 18px; color: #1e293b; margin-bottom: -10px;">Наши наставники:</p>
-                <!-- Генерируется JS -->
-            </div>
-
-            <div style="margin-top: 50px;">
-                <p style="font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 15px;">Связаться с менеджером:</p>
-                <a href="https://t.me/manager_cartelmarket" style="background:#0015ff; color:white; border-radius:20px; padding:18px 25px; display:flex; justify-content:space-between; text-decoration:none; font-weight:800; box-shadow: 0 10px 20px rgba(0,21,255,0.2);">
-                    Telegram 
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-                </a>
+            <div class="experts-list" id="experts-container">
+                <!-- Генерируется через JS -->
             </div>
         </div>
 
-        <!-- ПРОФИЛЬ ЭКСПЕРТА -->
+        <!-- ДЕТАЛИ ЭКСПЕРТА -->
         <div id="expert-detail-view" style="display:none">
-            <div id="expert-head"></div>
-            <h2 class="grad-h"><span>Краткое</span><br><span class="orange">представление</span></h2>
-            <p id="expert-bio" class="p-text"></p>
-            <h2 class="grad-h"><span>Профессиональные</span><br><span class="orange">достижения</span></h2>
-            <div id="expert-achievements"></div>
-            <button class="btn-back" onclick="goHome()">Назад</button>
+            <div id="expert-content"></div>
+            <button class="btn-back" onclick="goHome()">Назад к списку</button>
         </div>
 
         <!-- МЕРОПРИЯТИЯ -->
         <div id="events-list-view" style="display:none">
-            <h2 class="h-large">Мероприятия</h2>
+            <h2 class="grad-title"><span>Меро</span><span class="orange-part">приятия</span></h2>
             <div id="events-container">Загрузка...</div>
             <button class="btn-back" onclick="goHome()">Назад</button>
         </div>
 
-        <!-- ДЕТАЛИ МЕРОПРИЯТИЯ -->
-        <div id="event-detail-view" style="display:none">
-            <div id="detail-content"></div>
-        </div>
-
         <!-- СТАТЬИ -->
-        <div id="article-view" style="display:none" class="article-body">
+        <div id="article-view" style="display:none">
             <div id="article-page-target"></div>
-            <button class="btn-back" onclick="goHome()">Назад к обзору</button>
-        </div>
-    </div>
-
-    <!-- МОДАЛКА -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 10px; font-weight: 900;">Регистрация</h3>
-            <input type="text" id="reg-name" placeholder="Ваше имя">
-            <input type="tel" id="reg-phone" placeholder="Номер телефона">
-            <button class="btn-main" onclick="submitRegistration()">Записаться</button>
-            <button class="btn-back" style="border:none" onclick="closeModal()">Отмена</button>
+            <button class="btn-back" onclick="goHome()">Назад</button>
         </div>
     </div>
 
@@ -230,314 +163,217 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        const API_URL = "http://localhost:8080"; 
-        let allEvents = [];
-        let currentActiveEventId = null;
+        // Данные наставников строго по порядку с картинок
+        const expertsData = [
+            {
+                name: "Иван Крошный",
+                img: "image12.png",
+                bio: "<b>Иван Крошный</b> — международный предприниматель, создавший 30 компаний в 19 странах мира в партнерстве. <b>С января 2021 года ведет бизнес в ОАЭ</b>, включая консалтинг, инвестиционные проекты, ресторанный бизнес и стартапы в сфере экологии. Активно делится опытом через личный блог, обучающие курсы и специализированные платформы.",
+                achievements: [
+                    "<b>Управляет 30 компаниями в партнерстве</b>, включая брокерскую компанию, инвестиционный фонд и международную платежную систему.",
+                    "<b>Разработал успешные образовательные программы по бизнесу</b>, партнерству и масштабированию.",
+                    "<b>Создал ЭКО-стартап в ОАЭ</b> для аренды электробайков и сети зарядных станций.",
+                    "<b>Успешно консультирует</b> по релокации бизнеса и налоговой оптимизации в ОАЭ."
+                ]
+            },
+            {
+                name: "Александр Герчик",
+                img: "image11.png",
+                bio: "<b>Александр Герчик</b> — профессиональный трейдер и известный эксперт с более чем 25-летним опытом на фондовых рынках. Уникальный подход к трейдингу, настойчивость и целеустремленность принесли ему всемирное признание.\n\nАлександр начал свою карьеру, как проп-трейдер и зарекомендовал себя, как <b>самый безопасный трейдер по версии Mojo Wall Street Warriors</b>. Стремительная карьера Герчика позволила ему завоевать доверие как среди новичков, так и среди профессионалов.",
+                achievements: [
+                    "<b>Сооснователь и президент компании Gerchik & Co</b>, которая предоставляет трейдерам платформу с высокими стандартами безопасности.",
+                    "Участник телевизионного проекта 'Wall Street Warriors', где он <b>получил репутацию самого безопасного дей-трейдера.</b>",
+                    "Автор книг по трейдингу 'Биржевой Грааль' и 'Курс активного трейдера', которые стали популярными среди начинающих и опытных трейдеров."
+                ]
+            },
+            {
+                name: "Сергей Заботкин",
+                img: "image10.png",
+                bio: "<b>Сергей Заботкин</b> — эксперт по торговле акциями и криптовалютами, трейдер с опытом 10+ лет, профессиональный программист. Совмещая знания в области трейдинга и IT, он разработал уникальные торговые стратегии и инструменты, которые <b>помогают трейдерам повысить прибыльность и улучшить результаты.</b>",
+                achievements: [
+                    "Благодаря своим разработкам сократил время подготовки к торговому дню с нескольких часов до 15-30 минут.",
+                    "<b>Приумножил свой депозит на более чем 2000%.</b>",
+                    "Разработал торговую стратегию с <b>вероятностью успеха свыше 80%.</b> Этой стратегией Сергей делится со своими студентами в рамках обучения."
+                ]
+            },
+            {
+                name: "Игорь Павленко",
+                img: "image9.png",
+                bio: "<b>Игорь Павленко</b> — трейдер с опытом более 15 лет. Благодаря стратегии, основанной на сильных ценовых уровнях и строгому риск-менеджменту, он смог сделать торговлю на финансовых рынках основным источником своего дохода.\n\nС 2017 года Игорь обучает трейдеров по своей программе SPECULATOR. <b>Многие из его учеников стали профессиональными трейдерами, получили в управление средства</b> в проп-трейдинговых компаниях и от частных инвесторов.",
+                achievements: [
+                    "<b>Стратегия, основанная на торговле от риска</b>, позволила ему в начале профессиональной карьеры всего за год заработать более $12 000.",
+                    "<b>Стал одним из топовых наставников в клубе Cartel.</b> Его обучение помогло уже сотням трейдеров систематизировать свои знания о рынке и превратить их в источник стабильного заработка."
+                ]
+            },
+            {
+                name: "Виктор Макеев",
+                img: "image8.png",
+                bio: "<b>Виктор Макеев</b> — трейдер валютного и фондового рынков с опытом 10+ лет, <b>управляющий инвестиционными портфелями в проп-офисе. Торгует на NYSE, NASDAQ, FOREX.</b> Профессиональный экономист. В трейдинге на первое место ставит статистику, риск-менеджмент и математику торговли: это позволяет ему и его ученикам стабильно улучшать свои результаты в сделках.",
+                achievements: [
+                    "<b>Написал кандидатскую диссертацию</b> на тему «Инвестиционно-спекулятивный портфель финансовых инструментов».",
+                    "<b>Разработал стратегию торговли для индекса S&P500</b> с доходностью, в разы превышающей доходность банковских депозитов."
+                ]
+            },
+            {
+                name: "Денис Волкобрун",
+                img: "image7.png",
+                bio: "Денис Волкобрун — трейдер с опытом успешной торговли более 5 лет и 3-летним стажем работы аналитиком в одной из крупнейших брокерских компаний. <b>В своей торговле объединяет работу с индикаторами и рыночными объемами</b>, фундаментальный анализ и психологию трейдинга.\n\nТакой комплексный подход позволяет ему стабильно <b>зарабатывать на любых финансовых рынках:</b> валютном, фондовом, сырьевом или рынке цифровых активов.",
+                achievements: [
+                    "<b>Разработчик прибыльной торговой стратегии</b>, основанной на комплексном подходе к рынку.",
+                    "Имеет опыт работы аналитиком в одной из крупнейших <b>брокерских компаний.</b>",
+                    "Успешный наставник с <b>100% позитивными отзывами от учеников.</b>"
+                ]
+            },
+            {
+                name: "Муслим Абдуллаев",
+                img: "image6.png",
+                bio: "<b>Муслим Абдуллаев</b> — трейдер криптовалютного рынка, разработчик софта для трейдинга. Занял 3 место в мировом турнире среди 10 000 криптотрейдеров. Экс-амбассадор биржи Bybit. В трейдинге использует технический анализ с применением AI-индикаторов. Создал торговую стратегию, которая позволила ему достичь доходности +184%.",
+                achievements: [
+                    "<b>Третье место на WSOT</b> среди 10 000 трейдеров.",
+                    "<b>Разработал стратегию</b> торговли с доходностью 184%.",
+                    "Применяет технический анализ с <b>использованием AI-индикаторов.</b>",
+                    "Являлся амбассадором биржи Bybit в Казахстане, способствуя развитию локального трейдерского сообщества.",
+                    "<b>Автор программного обеспечения для трейдинга.</b>"
+                ]
+            },
+            {
+                name: "Виталий Кухта",
+                img: "image5.png",
+                bio: "<b>Виталий Кухта</b> — профессиональный трейдер, инвестор и наставник с 15-летним опытом. Автор стратегии «Модельный трейдинг», которая позволяет достигать доходности в 80% прибыльных сделок. Эксперт в среднесрочной и свинг-торговле на рынках Форекс, CME, NYSE и криптовалют.",
+                achievements: [
+                    "Разработал авторскую стратегию <b>«Модельный трейдинг»</b> на основе графических моделей и ценовых уровней.",
+                    "За 10 лет торговли по собственной методике достиг уровня <b>80% прибыльных сделок.</b>",
+                    "Управляет торговыми счетами и обучает трейдеров методам торговли с соотношением <b>риск/прибыль 10:1, 20:1 и даже 100:1.</b>",
+                    "<b>Наставник более 500 трейдеров</b>, успешно применяющих его подход на практике."
+                ]
+            },
+            {
+                name: "Кирилл Линник",
+                img: "image4.png",
+                bio: "<b>Кирилл Линник</b> — опытный <b>финансовый консультант со стажем 15+ лет</b> в области <b>управленческого учета, бюджетирования и оптимизации систем управления.</b> Он успешно реализовал более <b>200 консалтинговых проектов</b> для компаний в таких сферах, как <b>производство, торговля и услуги.</b> Кирилл разработал <b>15 методик</b> в области <b>контроллинга и финансового управления</b>, которые активно применяются в практике.",
+                achievements: [
+                    "<b>200+ успешно</b> реализованных консалтинговых проектов для компаний малого, среднего и крупного бизнеса в различных сферах (производство, торговля, услуги).",
+                    "<b>15+</b> авторских методик в области контроллинга, управление личными и корпоративными финансами.",
+                    "Ведущий тренер и консультант в области управленческого учета и оптимизации систем управления."
+                ]
+            },
+            {
+                name: "Роман Зиф",
+                img: "image3.png",
+                bio: "<b>Роман Зиф</b> — специалист в области алгоритмической торговли и автоматизации трейдинга. С 2012 года он прошел путь от инвестора до разработчика десятков торговых роботов и индикаторов. Его цель — помогать начинающим трейдерам осваивать алготрейдинг и создавать инструменты автоматизации для профессионалов.",
+                achievements: [
+                    "В рынке с 2012 года: от инвестирования до разработки алгоритмов и стратегий.",
+                    "В 2013 года изучил язык программирования <b>MQL4</b> и успешно разрабатывает <b>автоматические торговые системы.</b>",
+                    "Автор и разработчик <b>десятков торговых роботов</b>, используемых трейдерами по всему миру.",
+                    "Автор книг о трейдинге и инвестициях.",
+                    "Автор обучающего курса по алготрейдингу."
+                ]
+            },
+            {
+                name: "Дмитрий Сукиасов",
+                img: "image2.png",
+                bio: "<b>Дмитрий Сукиасов</b> — практикующий трейдер с опытом с 2014 года, ментор и партнёр клуба Cartel.\n\nСпециалист по риск-менеджменту и психологии трейдинга. Основатель профессиональной трейдерской команды.\n\nСоздатель одной из самых сильных риск-моделей и основатель собственной трейдерской команды. Специализируется на психологии трейдинга, устойчивости, дисциплине и системном подходе к торговле.",
+                achievements: [
+                    "<b>Более 10</b> лет в трейдинге.",
+                    "<b>Создал собственную</b> трейдерскую компанию.",
+                    "<b>Разработал рабочую модель управления рисками</b>, ставшую основой стабильной командной торговли.",
+                    "<b>Профессионально соединяет психологию</b>, дисциплину и реальные рыночные модели."
+                ]
+            }
+        ];
 
-        const names = ["Александр Герчик", "Виктор Смарт", "Дмитрий Трейд", "Елена Рынок", "Игорь Профи", "Анна Инвест", "Максим Рост", "Сергей График", "Ольга Сделка", "Павел Акция", "Марина Фонд"];
-
-        // Инициализация иконок в столбик
         function initExperts() {
             const container = document.getElementById('experts-container');
-            for(let i = 2; i <= 12; i++) {
-                const idx = i - 2;
+            expertsData.forEach((ex, idx) => {
                 const div = document.createElement('div');
-                div.className = 'expert-item';
-                div.onclick = () => showExpert(idx, `image${i}.png`);
+                div.className = 'expert-card-main';
+                div.onclick = () => showExpertDetail(idx);
                 div.innerHTML = `
                     <div class="expert-circle">
-                        <img src="image${i}.png" onerror="this.src='https://via.placeholder.com/120'">
+                        <img src="${ex.img}" onerror="this.src='https://via.placeholder.com/160'">
                     </div>
-                    <div class="expert-label">${names[idx]}</div>
+                    <div class="expert-name-label">${ex.name}</div>
                 `;
                 container.appendChild(div);
-            }
+            });
         }
 
-        function showExpert(idx, img) {
+        function showExpertDetail(idx) {
             hideAll();
+            const ex = expertsData[idx];
+            const content = document.getElementById('expert-content');
             document.getElementById('expert-detail-view').style.display = 'block';
-            document.getElementById('expert-head').innerHTML = `
-                <div style="text-align:center; margin-bottom:40px;">
-                    <div class="expert-circle" style="width:180px; height:180px;">
-                        <img src="${img}">
-                    </div>
-                    <h1 class="h-large" style="margin-top:20px;">${names[idx]}</h1>
-                </div>
-            `;
-            document.getElementById('expert-bio').innerHTML = `<strong>${names[idx]}</strong> — профессиональный трейдер и известный эксперт с более чем 25-летним опытом на фондовых рынках. Уникальный подход к трейдингу, настойчивость и целеустремленность принесли ему всемирное признание. \n\nАлександр начал свою карьеру, как проп-трейдер и зарекомендовал себя, как самый безопасный трейдер по по версии Mojo Wall Street Warriors.`;
-            document.getElementById('expert-achievements').innerHTML = `
-                <div class="list-item"><div class="blue-dot"></div><p class="p-text">Сооснователь и президент компании Gerchik & Co.</p></div>
-                <div class="list-item"><div class="blue-dot"></div><p class="p-text">Участник телевизионного проекта "Wall Street Warriors".</p></div>
-            `;
             window.scrollTo(0,0);
+
+            let achievementsHtml = ex.achievements.map(a => `
+                <div class="achieve-item">
+                    <div class="check-circle">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div class="desc-text" style="margin:0">${a}</div>
+                </div>
+            `).join('');
+
+            content.innerHTML = `
+                <div style="text-align:center; margin-bottom:40px;">
+                    <div class="expert-circle" style="width:220px; height:220px;">
+                        <img src="${ex.img}">
+                    </div>
+                    <h1 class="expert-name-label" style="font-size:32px;">${ex.name}</h1>
+                </div>
+
+                <h2 class="grad-title"><span>Краткое</span> <span class="orange-part">представление</span></h2>
+                <div class="desc-text">${ex.bio}</div>
+
+                <h2 class="grad-title" style="margin-top:50px;"><span>Профессиональные</span> <span class="orange-part">достижения</span></h2>
+                <div>${achievementsHtml}</div>
+            `;
         }
 
-        // --- ЛОГИКА API (localhost:8080) ---
-        function getEventHash(event) { return `${event.id}_${event.name}_${event.date}`; }
-        function loadRegistrations() {
-            const key = `cartel_reg_${tg.initDataUnsafe?.user?.id || 'def'}`;
-            return JSON.parse(localStorage.getItem(key) || '[]');
-        }
-        function saveRegistration(event) {
-            const key = `cartel_reg_${tg.initDataUnsafe?.user?.id || 'def'}`;
-            const regs = loadRegistrations();
-            const h = getEventHash(event);
-            if(!regs.includes(h)) { regs.push(h); localStorage.setItem(key, JSON.stringify(regs)); }
-        }
+        // Логика API и контента из предыдущих шагов
+        const API_URL = "http://localhost:8080";
 
         async function showEventsList() {
             hideAll();
             document.getElementById('events-list-view').style.display = 'block';
             const container = document.getElementById('events-container');
-            container.innerHTML = '<div style="padding:40px; text-align:center">Загрузка...</div>';
-            
+            container.innerHTML = '<div style="text-align:center; padding:40px;">Загрузка...</div>';
             try {
-                const uid = tg.initDataUnsafe?.user?.id || 0;
-                const res = await fetch(`${API_URL}/api/events?user_id=${uid}`);
+                const res = await fetch(`${API_URL}/api/events?user_id=${tg.initDataUnsafe?.user?.id || 0}`);
                 const data = await res.json();
-                allEvents = data.events;
-                
-                const regs = loadRegistrations();
                 container.innerHTML = '';
-                if(allEvents.length === 0) { container.innerHTML = '<div class="p-text" style="text-align:center">Мероприятий нет.</div>'; return; }
-
-                allEvents.forEach(ev => {
-                    const isReg = regs.includes(getEventHash(ev));
+                data.events.forEach(ev => {
                     const div = document.createElement('div');
-                    div.className = 'event-card';
-                    div.onclick = () => showEventDetail(ev.id);
+                    div.className = 'event-box';
                     div.innerHTML = `
-                        <div class="event-body">
-                            <div class="event-date-box">${ev.date}</div>
-                            <h3 class="h-large" style="font-size:20px; margin:0">${ev.name}</h3>
-                            ${isReg ? '<div style="color:#10b981; font-weight:700; margin-top:10px;">✓ Вы записаны</div>' : ''}
-                        </div>
+                        <div style="color:var(--accent-blue); font-weight:800; font-size:13px; margin-bottom:8px;">${ev.date}</div>
+                        <h3 style="font-weight:900; margin-bottom:10px;">${ev.name}</h3>
+                        <div style="font-size:14px; color:#475569;">${ev.description}</div>
                     `;
                     container.appendChild(div);
                 });
-            } catch (e) { container.innerHTML = '<div style="color:red; text-align:center">Ошибка связи с сервером.</div>'; }
+            } catch(e) { container.innerHTML = 'Мероприятий не найдено.'; }
         }
 
-        function showEventDetail(id) {
-            hideAll();
-            const ev = allEvents.find(x => x.id === id);
-            if(!ev) return;
-            currentActiveEventId = id;
-            const view = document.getElementById('event-detail-view');
-            view.style.display = 'block';
-            
-            const isReg = loadRegistrations().includes(getEventHash(ev));
-            
-            document.getElementById('detail-content').innerHTML = `
-                <div class="event-date-box">${ev.date}</div>
-                <h2 class="h-large">${ev.name}</h2>
-                <div class="p-text">${ev.description}</div>
-                ${isReg ? '<button class="btn-main registered">Вы уже записаны</button>' : '<button class="btn-main" onclick="openModal()">Записаться</button>'}
-                <button class="btn-back" onclick="showEventsList()">Назад к списку</button>
-            `;
-        }
-
-        async function submitRegistration() {
-            const name = document.getElementById('reg-name').value;
-            const phone = document.getElementById('reg-phone').value;
-            const ev = allEvents.find(e => e.id === currentActiveEventId);
-            if(!name || !phone) return tg.showAlert('Заполните поля');
-
-            try {
-                const res = await fetch(`${API_URL}/api/register`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ user_id: tg.initDataUnsafe?.user?.id || 0, event_id: currentActiveEventId, name, phone })
-                });
-                const resData = await res.json();
-                if(resData.success) {
-                    saveRegistration(ev);
-                    tg.showAlert(resData.message);
-                    closeModal();
-                    showEventDetail(currentActiveEventId);
-                }
-            } catch (e) { tg.showAlert('Ошибка регистрации'); }
-        }
-
-        // --- СТАТЬИ (Слово в слово) ---
-        function showArticle(num) {
+        function showArticle(id) {
             hideAll();
             document.getElementById('article-view').style.display = 'block';
             const target = document.getElementById('article-page-target');
             window.scrollTo(0,0);
-
-            if(num === 1) {
-                target.innerHTML = `
-                    <img src="statia1.jpg" class="statia-img">
-                    <h1 class="h-large">Как заработать на криптовалюте: системный подход, а не охота за хайпом</h1>
-                    <div class="p-text">Если ты пришёл в крипту “заработать быстро”, — скорее всего, ты попадёшь в ту самую статистику, где трейдеры теряют депозит за пару недель.
-                    Но если относиться к криптовалюте как к рынку, где работают те же законы риска, дисциплины и стратегии, что и в фондовом или валютном трейдинге, — ты можешь действительно выстроить стабильный источник дохода.
-
-                    <b>Крипта — не волшебная кнопка, а рынок возможностей</b>
-                    Сегодня криптовалюта — это уже не просто биткоин. Рынок включает тысячи монет, от фундаментальных проектов до мем-коинов, вроде “монета Трампа крипта”, которые появляются на волне новостей и исчезают так же быстро.
-                    На этом можно заработать — но только если ты понимаешь, как работает криптовалюта, какие факторы двигают цену и как оценивать риски.
-
-                    Вспомни недавний обвал биткоина (а за ним и всего рынка): многие трейдеры потеряли всё, что копили месяцами. Депозиты, собранные за полгода, сгорели за считанные дни. Почему? Потому что кто-то:
-                    <div class="list-item"><div class="blue-dot"></div><div>открыл слишком большую позицию,</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div>отключил стоп-лосс “чтобы не выбило зря”,</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div>вошёл на эмоциях — FOMO и желание “отбить” сделали своё дело,</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div>не имел чёткого торгового плана.</div></div>
-                    Вот тебе и урок: крипта — не про удачу, а про систему.
-
-                    <b>Как реально заработать на криптовалюте</b>
-                    Чтобы не попасть в ловушку “игры в угадайку”, смотри на крипторынок как на экосистему, где можно зарабатывать по-разному:
-                    <div class="list-item"><div class="blue-dot"></div><div><b>Спотовая торговля.</b> Покупаешь актив по выгодной цене и продаёшь дороже. Простой подход, но требует анализа уровней, трендов и объёмов.</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>Фьючерсы.</b> Позволяют зарабатывать и на падении рынка, но требуют строгого риск-менеджмента. Умение управлять позицией — ключ.</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>Стейкинг и DeFi.</b> Зарабатываешь процент за “заморозку” монет или участие в децентрализованных протоколах. Но нужно знать, какие проекты надёжны.</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>Арбитраж и боты.</b> Разница цен между биржами, алгоритмическая торговля — подход для тех, кто хочет системность и минимум эмоций.</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>NFT и GameFi.</b> Да, хайп уже прошёл, но в грамотных проектах остаются возможности. Главное — фильтровать маркетинг от реальной ценности.</div></div>
-
-                    <b>Почему важно системно подходить к криптоторговле</b>
-                    Зарабатывать на криптовалюте можно только тогда, когда ты действуешь по алгоритму. Ты не должен гадать — “взлетит или нет?”. У тебя должны быть ответы на вопросы:
-                    - Какой долей депозита я готов рискнуть?
-                    - Где мой стоп?
-                    - Когда я фиксирую прибыль?
-                    - Что я делаю, если рынок идёт против меня?
-
-                    Без этих правил ты не трейдер, а пассажир в вагоне без тормозов.
-                    А ведь большинство “хомяков”, которые теряют деньги на крипте, просто не задают себе этих вопросов.
-
-                    <b>Пример: когда система спасает депозит</b>
-                    Один из трейдеров, участник клуба Cartel, рассказывал: после трёх неудачных сделок он хотел “отыграться” и увеличил позицию втрое. Рынок пошёл против него — и за день счёт сократился почти на 60%. До этого он торговал самостоятельно — но после такой сильной просадки пересмотрел подход и прошел обучение с наставником. Под руководством эксперта он внедрил риск-менеджмент, стал вести журнал сделок и работать по алгоритму. Через три месяца вышел в стабильный плюс.
-
-                    Вывод: система не гарантирует прибыль, но она защищает тебя от катастрофы.
-
-                    <b>Крипта любит дисциплину</b>
-                    Криптовалюта — рынок, где можно удвоить депозит за неделю. И так же быстро его потерять. Но профессионалы зарабатывают не на удаче, а на повторяемых действиях.
-                    Трейдер с опытом не бежит покупать “монету Трампа” только потому, что она взлетела на 300%. Он понимает: хайп — это не стратегия, а ловушка.
-
-                    Если хочешь стабильно зарабатывать на криптовалюте, начни с трёх простых принципов:
-                    1. Убирай эмоции. Решения должны быть техническими, не эмоциональными.
-                    2. Фиксируй прибыль. Лучше забрать часть, чем остаться ни с чем.
-                    3. Держи дневник сделок. Ошибки повторяются, если ты их не отслеживаешь.
-
-                    <b>С чего начать, если хочешь зарабатывать на криптовалюте</b>
-                    - Разберись, как работает криптовалюта — блокчейн, токеномика, биржи. Без этого ты не видишь картину целиком.
-                    - Определи свой тип торговли: дневной трейдинг, свинг, долгосрочные инвестиции или алгоритмы.
-                    - Освой технический анализ — уровни, тренды, паттерны, объёмы.
-                    - Найди наставника, который уже торгует крипту системно. Это сокращает путь и избавляет от десятков глупых ошибок.
-                    В клубе Cartel ты можешь выбрать наставника, который работает именно с крипторынком: от анализа альткоинов до торговли фьючерсами.
-                    </div>
-                `;
-            } else if(num === 2) {
-                target.innerHTML = `
-                    <img src="statia2.jpg" class="statia-img">
-                    <h1 class="h-large">Почему твой теханализ не работает (и как это исправить)</h1>
-                    <div class="p-text">Признайся: ты тоже думал, что трейдинг — это про поиск «красивых картинок»? Нашел «голову и плечи», прочертил линию поддержки, выставил ордер и ждешь профит. Может, когда-то это и работало. Но сейчас, в 2026 году, рынок изменился и требует новых, более глубоких подходов и учета самых разных факторов. Вот почему ты видишь уровень, входишь вроде бы правильно — а цена пролетает его, даже не заметив.
-
-                    Проблема не в техническом анализе. Проблема в том, что ты занимаешься рисованием, а не анализом. Ты видишь след на песке, но не видишь того, кто его оставил. Давай разберем, как превратить твой «визуальный шум» в рабочую бизнес-систему.
-
-                    <b>1. Перестань быть «визуальным заложником»</b>
-                    Большинство трейдеров страдают «куриной слепотой». Видят касание уровня и сразу жмут кнопку. Это ошибка. Уровень сам по себе ничего не значит — это просто цена, по которой раньше что-то произошло.
-                    Тебе нужно видеть не линию, а объем и скорость. Кто толкает цену? С какой энергией она подошла к твоей отметке? Если ты ищешь на графике подтверждение своим желаниям («ну должно же развернуться!»), ты уже проиграл.
-
-                    <b>2. Три фильтра, которые спасут твой депозит</b>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>Контекст — твой главный союзник.</b> Паттерн в боковике и паттерн в начале тренда — это две разные истории.</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>Система «Idiot Proof» (Анти-дурак).</b> Твой анализ бесполезен, если у тебя нет жесткого стоп-крана.</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>Иерархия таймфреймов.</b> Хватит «залипать» на минутках. Тренды и сильные уровни живут на H4 и Daily.</div></div>
-
-                    <b>3. Риск как стоимость информации</b>
-                    Запомни: стоп-лосс — это не твоя ошибка. Это расчетная стоимость получения информации о том, что рынок пошел не по твоему сценарию.
-
-                    <b>4. Алгоритм действий: от хаоса к деньгам</b>
-                    - Скрининг: отобрал 5 инструментов.
-                    - Ожидание триггера: цена пришла в зону.
-                    - Исполнение: вошел с заранее понятным риском. Всё.
-
-                    <b>5. Почему учиться самому — это самая дорогая затея</b>
-                    Ты можешь потратить два года и три депозита, пытаясь дойти до всего сам. А можешь срезать путь. Рынок — самый дорогой учитель в мире, он берет оплату не только депозитом, но и твоими нервами.
-                    В Cartel мы не учим «рисовать линии». Мы учим видеть механику денег.
-                    </div>
-                `;
-            } else if(num === 3) {
-                target.innerHTML = `
-                    <img src="statia3.jpg" class="statia-img">
-                    <h1 class="h-large">5 решений, которые сделают трейдинг проще</h1>
-                    <div class="p-text">Трейдинг часто кажется сложным: нужно следить за новостями, строить стратегии, контролировать эмоции и находить время на аналитику. Но что, если мы скажем, что есть проверенные способы упростить процесс, убрать лишний шум и сфокусироваться на главном — на прибыли?
-
-                    <b>1. Создай свой индивидуальный алгоритм</b>
-                    <b>Проблема:</b> Торговля без плана — это игра в рулетку. 
-                    <b>Решение:</b> Твой личный алгоритм — это твоя GPS на рынке. Он чётко определяет, что и когда ты торгуешь, а главное — почему.
-
-                    <b>2. Торгуй с наставником</b>
-                    <b>Проблема:</b> Изучать теорию, не применяя её на практике, — всё равно что читать о плавании, сидя на берегу. 
-                    <b>Решение:</b> Работай с экспертом, который покажет тебе, как всё работает на реальном рынке. Он даст обратную связь, укажет на ошибки и поможет закрепить навыки.
-
-                    <b>3. Используй готовые торговые идеи</b>
-                    <b>Проблема:</b> Аналитика — это много часов у монитора, которые отнимают силы и время. 
-                    <b>Решение:</b> Используй уже готовые, проверенные решения. Сэкономь время и минимизируй риски. Сервис «Домашка» — это твой личный аналитический отдел.
-
-                    <b>4. Работай над ошибками</b>
-                    <b>Проблема:</b> Мы все ошибаемся, но мало кто умеет правильно анализировать свои провалы. 
-                    <b>Решение:</b> Только честный и глубокий разбор сделок с опытным трейдером может выявить твои слабые места.
-
-                    <b>5. Автоматизируй торговлю</b>
-                    <b>Проблема:</b> Эмоции — главный враг трейдера. Даже самая крутая стратегия может рухнуть. 
-                    <b>Решение:</b> Передай рутину и расчёты роботу или торговому советнику. Пусть он делает то, что у него получается лучше всего: торгует без жадности, страхов и усталости.
-                    </div>
-                `;
-            } else if(num === 4) {
-                target.innerHTML = `
-                    <img src="statia4.jpg" class="statia-img">
-                    <h1 class="h-large">Идеи для малого бизнеса: как и на чем можно заработать сегодня</h1>
-                    <div class="p-text">Открыть свое дело мечтают более 80%. Пандемия вывела бизнес на новый уровень и определила те ниши, которые могут выжить в ограничениях.
-
-                    <b>Идеи для бизнеса онлайн:</b>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>1. Онлайн-магазины.</b> Размещение на крупных платформах минимизирует затраты на сайт.</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>2. Онлайн-обучение.</b> Контент должен быть экспертным и уникальным.</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>3. Трейдинг.</b> Управление чужим капиталом и заработок на процентах.</div></div>
-
-                    <b>Идеи для бизнеса офлайн:</b>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>1. Сфера услуг.</b> От массажа до ремонта. Важно наработать базу (сарафанное радио).</div></div>
-                    <div class="list-item"><div class="blue-dot"></div><div><b>2. Сфера питания.</b> Кафе по франшизе требуют меньших затрат и дают поддержку.</div></div>
-
-                    <b>Без чего не будет работать ни один бизнес?</b>
-                    Без понимания, зачем вы это делаете и к какому результату хотите прийти. Открыть бизнес ради бизнеса ― плохая затея. Пройдите уроки бесплатного курса «Дорожная карта бизнеса», чтобы путь к этой империи был полон побед.
-                    </div>
-                `;
-            } else if(num === 5) {
-                target.innerHTML = `
-                    <img src="statia5.jpg" class="statia-img">
-                    <h1 class="h-large">Идеальный вход в сделку: как рассчитать риск и объем</h1>
-                    <div class="p-text">Многие тратят недели на поиск «идеальной стратегии», но основной урон твоему депозиту наносит не стратегия, а неверный вход в сделку.
-
-                    <b>Ошибки новичков:</b>
-                    1. Вход без расчёта риска.
-                    2. Стоп-лосс «с потолка».
-                    3. Торговля без подтверждения сигнала.
-
-                    <b>Алгоритм идеального входа:</b>
-                    - Сначала считаем риск (новичкам до 1%).
-                    - Стоп-лосс по логике рынка (за уровнями).
-                    - Вход только после подтверждения.
-
-                    <b>Формула расчёта объёма сделки:</b>
-                    <div style="background:#e0e7ff; padding:15px; border-radius:10px; font-family:monospace; margin:15px 0;">Объём лота = (Размер риска в $) / (Размер стоп-лосса в пунктах × Стоимость пункта)</div>
-
-                    Мнение эксперта Дениса Волкобруна: Торгуй от риска, ставь стоп по логике рынка, жди подтверждения. Научись управлять риском, и идеальный вход станет реальностью.
-                    </div>
-                `;
-            }
+            target.innerHTML = `<h1 class="grad-title"><span>Статья</span> <span class="orange-part">${id}</span></h1><div class="desc-text">Контент статьи загружается...</div>`;
         }
 
+        function hideAll() {
+            ['home-view','expert-detail-view','events-list-view','article-view'].forEach(id => document.getElementById(id).style.display = 'none');
+            document.getElementById('articles-list').classList.remove('active');
+            document.getElementById('art-btn').classList.remove('active');
+        }
+
+        function goHome() { hideAll(); document.getElementById('home-view').style.display = 'block'; window.scrollTo(0,0); }
         function toggleArticles() {
             document.getElementById('articles-list').classList.toggle('active');
             document.getElementById('art-btn').classList.toggle('active');
         }
-        function hideAll() {
-            ['home-view','expert-detail-view','events-list-view','event-detail-view','article-view'].forEach(id => document.getElementById(id).style.display = 'none');
-            document.getElementById('articles-list').classList.remove('active');
-            document.getElementById('art-btn').classList.remove('active');
-        }
-        function goHome() { hideAll(); document.getElementById('home-view').style.display = 'block'; window.scrollTo(0,0); }
-        function openModal() { document.getElementById('modal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
         initExperts();
     </script>
