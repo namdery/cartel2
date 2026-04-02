@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cartel Club</title> 
+    <title>Cartel Club</title>
+
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
+
             --bg-color: #f4f7ff;
             --text-main: #1a1e2e;
             --accent-blue: #0015ff;
@@ -17,7 +20,9 @@
             --success-green: #10b981;
             --error-red: #ef4444;
             --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
             --photo-gradient: linear-gradient(90deg, #0015ff 0%, #7e22ce 40%, #ea580c 70%, #ff6d2d 100%);
+
             --bar-gradient: linear-gradient(90deg, #4c1d95, #7e22ce, #ea580c, #f97316, #4c1d95);
         }
 
@@ -31,11 +36,12 @@
             line-height: 1.6;
         }
 
+
         .top-promo-bar {
             position: fixed; top: 0; left: 0; right: 0;
             height: 48px; background: var(--bar-gradient);
             background-size: 200% auto;
-            animation: shimmer 8s linear infinite; /* Медленное переливание */
+            animation: shimmer 8s linear infinite; 
             display: flex; align-items: center; justify-content: space-between;
             color: white; font-size: 11px; font-weight: 700;
             z-index: 1001; cursor: pointer; padding: 0 15px;
@@ -49,7 +55,9 @@
             white-space: nowrap; margin-left: 10px;
         }
 
+
         @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+
 
         header {
             position: fixed; top: 48px; left: 0; right: 0;
@@ -61,6 +69,7 @@
 
         .logo-img { height: 22px; cursor: pointer; }
 
+
         .nav-menu { display: flex; gap: 8px; margin-left: auto; position: relative; }
         .nav-btn {
             background: #ffffff; border: 1px solid var(--frame-blue); 
@@ -69,8 +78,10 @@
             display: flex; align-items: center; gap: 8px;
         }
         
+
         .nav-btn.active .arrow-svg { transform: rotate(180deg); }
         .arrow-svg { width: 10px; transition: 0.3s; fill: currentColor; }
+
 
         .articles-dropdown {
             position: absolute; top: 50px; right: 0;
@@ -89,8 +100,10 @@
 
         .container { max-width: 600px; margin: 0 auto; padding: 130px 20px 40px; }
 
+
         .view-section { animation: viewFadeIn 0.5s ease-out; }
         @keyframes viewFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
 
         .grad-h-main {
             font-weight: 900; font-size: 28px; line-height: 1.1; 
@@ -98,10 +111,12 @@
             background: var(--photo-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         
+
         .section-header {
             font-weight: 900; font-size: 24px; color: var(--accent-blue);
             margin-bottom: 15px; margin-top: 35px;
         }
+
 
         .experts-column { display: flex; flex-direction: column; align-items: center; gap: 40px; margin-top: 50px; }
         .expert-item { text-align: center; cursor: pointer; width: 100%; }
@@ -122,6 +137,7 @@
             flex-shrink: 0; margin-top: 2px; border: 4px solid #d1dbff;
         }
 
+
         .btn-main {
             width: 100%; padding: 18px; background: var(--accent-orange);
             color: white; border: none; border-radius: 16px;
@@ -135,6 +151,7 @@
             border-radius: 14px; font-weight: 700; color: #64748b; margin-top: 30px;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
+
 
         .event-link-box { margin: 15px 0; padding: 14px; background: #f8faff; border-radius: 14px; border: 1px dashed var(--frame-blue); word-break: break-all; }
         .event-link-box a { color: var(--accent-blue); text-decoration: none; font-weight: 700; font-size: 14px; }
@@ -182,6 +199,7 @@
                 Статьи <svg class="arrow-svg" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
             </button>
             <button class="nav-btn" onclick="showEventsList()">Мероприятия</button>
+
             <div id="articles-list" class="articles-dropdown">
                 <a href="javascript:void(0)" onclick="showArticle(1)" class="article-link">Как заработать на криптовалюте</a>
                 <a href="javascript:void(0)" onclick="showArticle(2)" class="article-link">Почему твой теханализ не работает</a>
@@ -193,13 +211,15 @@
     </header>
 
     <div class="container">
+
         <div id="home-view" class="view-section">
             <h1 class="grad-h-main">Cartel — международный клуб успеха!</h1>
             <p class="p-main" style="font-size: 18px;">Объединяем трейдеров и инвесторов со всего мира для совместного роста и финансового успеха.</p>
             <div class="experts-column" id="experts-container">
-                <p style="font-weight: 800; font-size: 18px; color: #1e293b;">Наставники клуба Cartel</p>
+                <p style="font-weight: 800; font-size: 18px; color: #1e293b;">Наши наставники:</p>
             </div>
         </div>
+
 
         <div id="expert-detail-view" style="display:none" class="view-section">
             <div id="expert-header-box"></div>
@@ -221,6 +241,7 @@
             <div id="event-target-content"></div>
         </div>
 
+
         <div id="article-view" style="display:none" class="view-section">
             <div id="article-final-target"></div>
             <button class="btn-back" onclick="goHome()">Назад</button>
@@ -231,7 +252,7 @@
     <div id="chat-modal" class="modal">
         <div class="modal-content">
             <h3 style="margin-bottom: 10px; font-weight: 900;">Вступить в чат</h3>
-            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Зарегистрируйтесь для входа</p>
+            <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Заполните форму для получения ссылки</p>
             <input type="text" id="chat-name" placeholder="Ваше имя">
             <input type="tel" id="chat-phone" placeholder="Номер телефона">
             <input type="email" id="chat-email" placeholder="Ваш Email">
@@ -240,6 +261,7 @@
         </div>
     </div>
 
+
     <div id="thanks-modal" class="modal">
         <div class="modal-content">
             <h2 class="grad-h-main" style="font-size: 26px;">Спасибо!</h2>
@@ -247,6 +269,7 @@
             <button class="btn-main" onclick="window.location.href='https://t.me/fxcartel'">Вступить</button>
         </div>
     </div>
+
 
     <div id="modal" class="modal">
         <div class="modal-content">
@@ -276,6 +299,7 @@
             return JSON.parse(localStorage.getItem(`c_regs_${userId}`) || '[]');
         }
 
+
         function saveReg(ev) {
             const userId = tg.initDataUnsafe?.user?.id || 'def';
             const regs = getRegs();
@@ -286,9 +310,11 @@
             }
         }
 
+
         function openChatModal() { document.getElementById('chat-modal').style.display = 'flex'; }
         function closeChatModal() { document.getElementById('chat-modal').style.display = 'none'; }
         
+
         function submitChatRegistration() {
             const name = document.getElementById('chat-name').value;
             const phone = document.getElementById('chat-phone').value;
@@ -297,6 +323,7 @@
 
             if(!name || !phone || !email) { tg.showAlert("Заполните все поля"); return; }
             
+
             if(!email.includes('@')) {
                 emailInput.classList.add('input-error');
                 emailInput.value = "";
@@ -309,6 +336,7 @@
             closeChatModal();
             document.getElementById('thanks-modal').style.display = 'flex';
         }
+
 
         const experts = [
             {
@@ -368,6 +396,7 @@
             }
         ];
 
+
         function initExperts() {
             const container = document.getElementById('experts-container');
             experts.forEach((ex, idx) => {
@@ -379,6 +408,7 @@
             });
         }
 
+
         function showExpert(idx) {
             hideAll();
             const ex = experts[idx];
@@ -389,11 +419,12 @@
             window.scrollTo(0,0);
         }
 
+
         async function showEventsList() {
             hideAll();
             document.getElementById('events-list-view').style.display = 'block';
             const container = document.getElementById('events-container');
-            container.innerHTML = 'Ошибка';
+            container.innerHTML = 'Загрузка...';
             try {
                 const res = await fetch(`${API_URL}/api/events?user_id=${tg.initDataUnsafe?.user?.id || 0}`);
                 const data = await res.json();
@@ -408,7 +439,7 @@
                     card.innerHTML = `<div style="color:var(--accent-blue); font-weight:800; font-size:13px;">${ev.date}</div><h3 style="font-weight:900; margin-top:5px;">${ev.name}</h3>${isRegistered ? '<div style="color:var(--success-green); font-weight:700; margin-top:10px;">✓ Вы записаны</div>' : ''}`;
                     container.appendChild(card);
                 });
-            } catch(e) { container.innerHTML = 'Ошибка'; }
+            } catch(e) { container.innerHTML = 'Мероприятия временно недоступны.'; }
         }
 
 
@@ -421,7 +452,7 @@
             document.getElementById('event-detail-view').style.display = 'block';
             
             const linkBlock = ev.link ? `<div class="event-link-box"><a href="${ev.link}" target="_blank">Ссылка: ${ev.link}</a></div>` : '';
-            const waitMsg = isRegistered ? `<div class="waiting-msg">Ждем вас ${ev.date}.</div>` по адресу: '';
+            const waitMsg = isRegistered ? `<div class="waiting-msg">Ждем вас ${ev.date} по адресу:.</div>` : '';
             const btnHtml = isRegistered ? `<button class="btn-main registered">Вы уже записаны</button>` : `<button class="btn-main" onclick="openModal()">Записаться на мероприятие</button>`;
 
             document.getElementById('event-target-content').innerHTML = `
@@ -435,6 +466,7 @@
             `;
         }
 
+
         async function submitRegistration() {
             const n = document.getElementById('reg-name').value;
             const p = document.getElementById('reg-phone').value;
@@ -446,6 +478,7 @@
                 if(d.success) { saveReg(ev); tg.showAlert(d.message); closeModal(); showEventDetail(curEvId); }
             } catch(e) { tg.showAlert('Ошибка сервера'); }
         }
+
 
         function showArticle(id) {
             hideAll(); document.getElementById('article-view').style.display = 'block';
@@ -606,6 +639,7 @@
         function goHome() { hideAll(); document.getElementById('home-view').style.display = 'block'; window.scrollTo({top: 0, behavior: 'smooth'}); }
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
         function openModal() { document.getElementById('modal').style.display = 'flex'; }
+
 
         initExperts();
     </script>
