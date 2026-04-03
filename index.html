@@ -284,7 +284,9 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand(); 
-        const API_URL = "http://localhost:8080";
+        
+        // ВАЖНО: Замените localhost на IP вашего сервера, если тестируете на телефоне
+        const API_URL = "http://localhost:8080"; 
         let allEvents = [];
         let curEvId = null;
 
@@ -452,7 +454,7 @@
             document.getElementById('event-detail-view').style.display = 'block';
             
             const linkBlock = ev.link ? `<div class="event-link-box"><a href="${ev.link}" target="_blank">Ссылка: ${ev.link}</a></div>` : '';
-            const waitMsg = isRegistered ? `<div class="waiting-msg">Ждем вас ${ev.date} по адресу:.</div>` : '';
+            const waitMsg = isRegistered ? `<div class="waiting-msg">Вы успешно записаны на мероприятие!</div>` : '';
             const btnHtml = isRegistered ? `<button class="btn-main registered">Вы уже записаны</button>` : `<button class="btn-main" onclick="openModal()">Записаться на мероприятие</button>`;
 
             document.getElementById('event-target-content').innerHTML = `
@@ -471,12 +473,34 @@
             const n = document.getElementById('reg-name').value;
             const p = document.getElementById('reg-phone').value;
             const ev = allEvents.find(x => x.id === curEvId);
-            if(!n || !p) return tg.showAlert('Заполните поля');
+            
+            if(!n || !p) return tg.showAlert('Заполните все поля');
+            
             try {
-                const r = await fetch(`${API_URL}/api/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({user_id:tg.initDataUnsafe?.user?.id||0, event_id:curEvId, name:n, phone:p}) });
+                const r = await fetch(`${API_URL}/api/register`, { 
+                    method:'POST', 
+                    headers:{'Content-Type':'application/json'}, 
+                    body:JSON.stringify({
+                        user_id: tg.initDataUnsafe?.user?.id || 0, 
+                        event_id: curEvId, 
+                        name: n, 
+                        phone: p
+                    }) 
+                });
+                
                 const d = await r.json();
-                if(d.success) { saveReg(ev); tg.showAlert(d.message); closeModal(); showEventDetail(curEvId); }
-            } catch(e) { tg.showAlert('Ошибка сервера'); }
+                
+                if(d.success) { 
+                    saveReg(ev); 
+                    tg.showAlert("Вы успешно записаны!"); 
+                    closeModal(); 
+                    showEventDetail(curEvId); 
+                } else {
+                    tg.showAlert(d.error || "Ошибка регистрации");
+                }
+            } catch(e) { 
+                tg.showAlert('Ошибка сервера. Проверьте соединение с ботом.'); 
+            }
         }
 
 
